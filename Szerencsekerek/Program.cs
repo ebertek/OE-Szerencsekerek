@@ -15,46 +15,65 @@ namespace Szerencsekerek
     {
         private string puzzle;
         private const char mask = '-';
-        private System.Text.StringBuilder solved = new System.Text.StringBuilder();
+        private bool[] solved;
+        private int length, done;
+        public bool gameOver;
         public Board(string puzzle)
         {
             this.puzzle = puzzle.ToUpper();
-            Hide(mask);
+            length = puzzle.Length;
+            solved = new bool[length];
+            Normalize();
         }
         public Board(string[] puzzles)
         {
             Random rnd = new Random();
             puzzle = puzzles[rnd.Next(puzzles.Length)].ToUpper();
-            Hide(mask);
+            length = puzzle.Length;
+            solved = new bool[length];
+            Normalize();
         }
-        private void Hide(char character)
+        private void Normalize()
         {
-            for (int i = 0; i < puzzle.Length; i++)
+            for (int i = 0; i < length; i++)
             {
-                if (Char.IsLetter(puzzle[i]))
+                if (!Char.IsLetter(puzzle[i]))
                 {
-                    solved.Append(character);
-                } else
-                {
-                    solved.Append(puzzle[i]);
+                    solved[i] = true;
+                    done++;
                 }
             }
         }
         public void Draw()
         {
-            Console.WriteLine(solved);
+            for (int i = 0; i < length; i++)
+            {
+                if (solved[i])
+                {
+                    Console.Write(puzzle[i]);
+                }
+                else
+                {
+                    Console.Write(mask);
+                }
+            }
+            Console.Write('\n');
         }
         public int Try(char letter)
         {
             letter = Char.ToUpper(letter);
             int Correct = 0;
-            for (int i = 0; i < puzzle.Length; i++)
+            for (int i = 0; i < length; i++)
             {
-                if (puzzle[i] != solved[i] && puzzle[i] == letter)
+                if (!solved[i] && puzzle[i] == letter)
                 {
-                    solved[i] = puzzle[i];
+                    solved[i] = true;
                     Correct++;
                 }
+            }
+            done += Correct;
+            if (done >= length) {
+                gameOver = true;
             }
             return Correct;
         }
@@ -71,12 +90,16 @@ namespace Szerencsekerek
             board.Draw();
             Wheel wheel = new Wheel();
             Person player1 = new Person();
-            int Spun = wheel.Spin();
-            Console.Write("Adj meg egy betűt: ");
-            player1.Winnings += Spun * board.Try(Console.ReadKey().KeyChar);
-            Console.Write('\n');
-            board.Draw();
-            Console.ReadKey();
+            while (!board.gameOver)
+            {
+                int Spun = wheel.Spin();
+                Console.Write("Adj meg egy betűt: ");
+                player1.Winnings += Spun * board.Try(Console.ReadKey().KeyChar);
+                Console.Clear();
+                board.Draw();
+            }
+            Console.WriteLine("Gratulálok, nyertél! Nyereményed: " + String.Format(new System.Globalization.CultureInfo("hu-HU"), "{0:C0}", player1.Winnings));
+            // Console.ReadKey();
         }
     }
 }
