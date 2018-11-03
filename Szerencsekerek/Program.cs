@@ -13,28 +13,30 @@ namespace Szerencsekerek
     }
     class Board
     {
-        private string puzzle, solved;
+        private string puzzle;
+        private const char mask = '-';
+        private System.Text.StringBuilder solved = new System.Text.StringBuilder();
         public Board(string puzzle)
         {
-            this.puzzle = puzzle;
-            Hide();
+            this.puzzle = puzzle.ToUpper();
+            Hide(mask);
         }
         public Board(string[] puzzles)
         {
             Random rnd = new Random();
-            puzzle = puzzles[rnd.Next(puzzles.Length)];
-            Hide();
+            puzzle = puzzles[rnd.Next(puzzles.Length)].ToUpper();
+            Hide(mask);
         }
-        private void Hide()
+        private void Hide(char character)
         {
             for (int i = 0; i < puzzle.Length; i++)
             {
                 if (Char.IsLetter(puzzle[i]))
                 {
-                    solved += "💩";
+                    solved.Append(character);
                 } else
                 {
-                    solved += puzzle[i];
+                    solved.Append(puzzle[i]);
                 }
             }
         }
@@ -42,17 +44,38 @@ namespace Szerencsekerek
         {
             Console.WriteLine(solved);
         }
-
+        public int Try(char letter)
+        {
+            letter = Char.ToUpper(letter);
+            int Correct = 0;
+            for (int i = 0; i < puzzle.Length; i++)
+            {
+                if (puzzle[i] != solved[i] && puzzle[i] == letter)
+                {
+                    solved[i] = puzzle[i];
+                    Correct++;
+                }
+            }
+            return Correct;
+        }
+    }
+    class Person
+    {
+        public int Winnings;
     }
     class Program
     {
         static void Main(string[] args)
         {
-            Wheel Wheel = new Wheel();
-            Board Board = new Board(System.IO.File.ReadAllLines("kozmondasok.txt"));
-            int Spun = Wheel.Spin();
-            Console.WriteLine(Spun + " Ft");
-            Board.Draw();
+            Board board = new Board(System.IO.File.ReadAllLines("kozmondasok.txt"));
+            board.Draw();
+            Wheel wheel = new Wheel();
+            Person player1 = new Person();
+            int Spun = wheel.Spin();
+            Console.Write("Adj meg egy betűt: ");
+            player1.Winnings += Spun * board.Try(Console.ReadKey().KeyChar);
+            Console.Write('\n');
+            board.Draw();
             Console.ReadKey();
         }
     }
