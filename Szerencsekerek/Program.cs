@@ -86,6 +86,7 @@ namespace Szerencsekerek
     {
         static void Main(string[] args)
         {
+            System.Globalization.CultureInfo CI = new System.Globalization.CultureInfo("hu-HU");
             Board board = new Board(System.IO.File.ReadAllLines("kozmondasok.txt"));
             board.Draw();
             Wheel wheel = new Wheel();
@@ -93,12 +94,12 @@ namespace Szerencsekerek
             while (!board.gameOver)
             {
                 int Spun = wheel.Spin();
-                Console.Write("Adj meg egy betűt: ");
+                Console.Write("Adj meg egy betűt " + String.Format(CI, "{0:C0}", Spun) + "-ért: ");
                 player1.Winnings += Spun * board.Try(Console.ReadKey().KeyChar);
                 Console.Clear();
                 board.Draw();
             }
-            Console.WriteLine("Gratulálok, nyertél! Nyereményed: " + String.Format(new System.Globalization.CultureInfo("hu-HU"), "{0:C0}", player1.Winnings));
+            Console.WriteLine("Gratulálok, nyertél! Nyereményed: " + String.Format(CI, "{0:C0}", player1.Winnings));
             // Console.ReadKey();
         }
     }
