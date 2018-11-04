@@ -78,8 +78,23 @@ namespace Szerencsekerek
                 gameOver |= done >= length;
                 return Correct;
             } else
+            if (Char.IsDigit(letter))
             {
-                return -1;
+                return -2; // Special functions
+            } else
+            {
+                Console.Beep();
+                return -1; // Vowel / unacceptable character
+            }
+        }
+        public bool Try(string solution)
+        {
+            if (string.Equals(solution, puzzle, StringComparison.InvariantCultureIgnoreCase)) {
+                gameOver = true;
+                return true;
+            } else
+            {
+                return false;
             }
         }
     }
@@ -117,13 +132,27 @@ namespace Szerencsekerek
             }
             while (!board.gameOver)
             {
+                /* Spin the Wheel */
                 int spun = wheel.Spin();
+                if (spun == 0) {
+                    Console.Beep();
+                    spun = wheel.Spin();
+                    currentPlayer++;
+                    if (currentPlayer == players.Length)
+                    {
+                        currentPlayer = 0;
+                    }
+                }
+
+                /* Draw the Puzzle Board and Standings */
                 Console.Clear();
                 board.Draw();
                 for (int i = 0; i < players.Length; i++)
                 {
                     Console.WriteLine(i + 1 + ". játékos: " + String.Format(CI, "{0:C0}", players[i].Winnings));
                 }
+
+                /* Get user input */
                 int correct = -1;
                 Console.WriteLine();
                 while (correct == -1)
@@ -132,11 +161,29 @@ namespace Szerencsekerek
                     Console.Write(currentPlayer + 1 + ". játékos, adj meg egy betűt " + String.Format(CI, "{0:C0}", spun) + "-ért: ");
                     correct = board.Try(Console.ReadKey().KeyChar);
                 }
-                players[currentPlayer].Add(spun * correct);
-                currentPlayer++;
-                if (currentPlayer == players.Length)
+                if (correct > 0)
                 {
-                    currentPlayer = 0;
+                    players[currentPlayer].Add(spun * correct);
+                } else
+                if (correct == 0)
+                {
+                    currentPlayer++;
+                    if (currentPlayer == players.Length)
+                    {
+                        currentPlayer = 0;
+                    }
+                } else
+                {
+                    ClearLastLine();
+                    Console.Write(currentPlayer + 1 + ". játékos, add meg a megoldást " + String.Format(CI, "{0:C0}", players[currentPlayer].Winnings) + "-ért: ");
+                    if (!board.Try(Console.ReadLine()))
+                    {
+                        currentPlayer++;
+                        if (currentPlayer == players.Length)
+                        {
+                            currentPlayer = 0;
+                        }
+                    }
                 }
             }
             Console.Clear();
@@ -150,6 +197,7 @@ namespace Szerencsekerek
                     winner = i;
                 }
             }
+            Console.WriteLine();
             Console.WriteLine("Gratulálok, " + (winner + 1) + ". játékos, nyertél!");
             // Console.ReadKey();
         }
