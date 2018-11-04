@@ -64,7 +64,7 @@ namespace Szerencsekerek
             }
             Console.Write('\n');
         }
-        public int Try(char letter)
+        public int Guess(char letter)
         {
             letter = Char.ToUpper(letter);
             if ("BCDFGHJKLMNPQRSTVWXZ".Contains(letter))
@@ -91,7 +91,7 @@ namespace Szerencsekerek
                 return -1; // Vowel / unacceptable character
             }
         }
-        public bool Try(string solution)
+        public bool Guess(string solution)
         {
             if (string.Equals(solution, puzzle, StringComparison.InvariantCultureIgnoreCase)) {
                 gameOver = true;
@@ -176,7 +176,7 @@ namespace Szerencsekerek
                     {
                         ClearCurrentLine();
                         Console.Write(currentPlayer + 1 + ". játékos, adj meg egy betűt " + String.Format(CI, "{0:C0}", spun) + "-ért: ");
-                        correct = board.Try(Console.ReadKey().KeyChar);
+                        correct = board.Guess(Console.ReadKey().KeyChar);
                     }
                     if (correct > 0)
                     {
@@ -195,7 +195,7 @@ namespace Szerencsekerek
                     {
                         ClearCurrentLine();
                         Console.Write(currentPlayer + 1 + ". játékos, add meg a megoldást " + String.Format(CI, "{0:C0}", players[currentPlayer].Winnings) + "-ért: ");
-                        if (!board.Try(Console.ReadLine()))
+                        if (!board.Guess(Console.ReadLine()))
                         {
                             currentPlayer++;
                             if (currentPlayer == players.Length)
@@ -208,6 +208,7 @@ namespace Szerencsekerek
                         }
                     }
                 } // while
+                /* Only the winner of the round gets to keep their points */
                 for (int j = 0; j < players.Length; j++)
                 {
                     if (j != winner)
