@@ -4,7 +4,11 @@ namespace Szerencsekerek
 {
     class Wheel
     {
-        private readonly int[] layout = new int[] { 0, 1700, 5500, 1100, 6000, 1100, 2000, 1100, 1500, 5500, 1300, 4000, 900, 1100, 11000, 1600, 1200, 4000, 1500, 1200, 6000, 1000, 13000 };
+        private readonly int[] layout;
+        public Wheel(int[] layout)
+        {
+            this.layout = layout;
+        }
         public int Spin()
         {
             Random rnd = new Random();
@@ -121,9 +125,12 @@ namespace Szerencsekerek
         {
             /* Initialize the Game */
             System.Globalization.CultureInfo CI = new System.Globalization.CultureInfo("hu-HU");
-            Wheel wheel = new Wheel();
-            Console.Write("Hány játékos játszik? ");
-            int playerCount = int.Parse(Console.ReadLine());
+            /* int[] MTV = new int[] { 0, 1700, 5500, 1100, 6000, 1100, 2000, 1100, 1500, 5500, 1300, 4000, 900, 1100, 11000, 1600, 1200, 4000, 1500, 1200, 6000, 1000, 13000 }; */
+            int[] husz = new int[] { 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000 };
+            Wheel wheel = new Wheel(husz);
+            int playerCount = 3;
+            /* Console.Write("Hány játékos játszik? ");
+            int playerCount = int.Parse(Console.ReadLine()); */
             Player[] players = new Player[playerCount];
             for (int i = 0; i < players.Length; i++)
             {
