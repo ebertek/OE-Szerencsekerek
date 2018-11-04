@@ -126,7 +126,7 @@ namespace Szerencsekerek
             /* Initialize the Game */
             System.Globalization.CultureInfo CI = new System.Globalization.CultureInfo("hu-HU");
             /* int[] MTV = new int[] { 0, 1700, 5500, 1100, 6000, 1100, 2000, 1100, 1500, 5500, 1300, 4000, 900, 1100, 11000, 1600, 1200, 4000, 1500, 1200, 6000, 1000, 13000 }; */
-            int[] husz = new int[] { 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000 };
+            int[] husz = { 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000 };
             Wheel wheel = new Wheel(husz);
             int playerCount = 3;
             /* Console.Write("Hány játékos játszik? ");
@@ -174,7 +174,7 @@ namespace Szerencsekerek
                     Console.WriteLine();
                     while (correct == -1)
                     {
-                        ClearLastLine();
+                        ClearCurrentLine();
                         Console.Write(currentPlayer + 1 + ". játékos, adj meg egy betűt " + String.Format(CI, "{0:C0}", spun) + "-ért: ");
                         correct = board.Try(Console.ReadKey().KeyChar);
                     }
@@ -193,7 +193,7 @@ namespace Szerencsekerek
                     }
                     else
                     {
-                        ClearLastLine();
+                        ClearCurrentLine();
                         Console.Write(currentPlayer + 1 + ". játékos, add meg a megoldást " + String.Format(CI, "{0:C0}", players[currentPlayer].Winnings) + "-ért: ");
                         if (!board.Try(Console.ReadLine()))
                         {
@@ -232,7 +232,7 @@ namespace Szerencsekerek
             Console.WriteLine("Gratulálok, " + (finalWinner + 1) + ". játékos, nyertél!");
             // Console.ReadKey();
         }
-        public static void ClearLastLine()
+        static void ClearCurrentLine()
         {
             Console.SetCursorPosition(0, Console.CursorTop);
             Console.Write(new string(' ', Console.BufferWidth));
