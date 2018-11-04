@@ -19,7 +19,7 @@ namespace Szerencsekerek
     {
         private readonly string puzzle;
         private const char mask = '-';
-        private readonly bool[] solved; // ?
+        private readonly bool[] solved;
         private readonly int length;
         private int done;
         public bool gameOver;
@@ -140,10 +140,16 @@ namespace Szerencsekerek
             /* Console.Write("Hány kört játsszunk? ");
             int rounds = int.Parse(Console.ReadLine()); */
 
+            string fileName = "kozmondasok.txt";
+            if (args.Length != 0)
+            {
+                fileName = args[0];
+            }
+
             /* Start the Game */
             for (int i = 1; i <= rounds; i++)
             {
-                Board board = new Board(System.IO.File.ReadAllLines("kozmondasok.txt"));
+                Board board = new Board(System.IO.File.ReadAllLines(fileName));
                 int currentPlayer = 0;
                 int winner = -1;
                 while (!board.gameOver)
