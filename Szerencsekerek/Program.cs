@@ -64,10 +64,10 @@ namespace Szerencsekerek
             }
             Console.Write('\n');
         }
-        public int Guess(char letter)
+        public int Guess(char letter, bool anyCharacter)
         {
             letter = Char.ToUpper(letter);
-            if ("BCDFGHJKLMNPQRSTVWXZ".Contains(letter))
+            if (anyCharacter || "BCDFGHJKLMNPQRSTVWXZ".Contains(letter))
             {
                 int Correct = 0;
                 for (int i = 0; i < length; i++)
@@ -84,7 +84,7 @@ namespace Szerencsekerek
             } else
             if (Char.IsDigit(letter))
             {
-                return -2; // Special functions
+                return -(int)char.GetNumericValue(letter)-1; // Special functions
             } else
             {
                 Console.Beep();
@@ -113,6 +113,10 @@ namespace Szerencsekerek
         public void Add(int amount)
         {
             winnings += amount;
+        }
+        public void Subtract(int amount)
+        {
+            winnings -= amount;
         }
         public void Reset()
         {
@@ -146,6 +150,8 @@ namespace Szerencsekerek
                 fileName = args[0];
             }
 
+            const int vowelPrice = 5000;
+
             /* Start the Game */
             for (int i = 1; i <= rounds; i++)
             {
@@ -169,6 +175,7 @@ namespace Szerencsekerek
 
                     /* Draw the Puzzle Board and Standings */
                     Console.Clear();
+                    Console.WriteLine(i + ". kör \t\t 1) Megoldás 2) Magánhangzó vásárlása (" + String.Format(CI, "{0:C0}", vowelPrice) + ")");
                     board.Draw();
                     for (int j = 0; j < players.Length; j++)
                     {
@@ -176,20 +183,20 @@ namespace Szerencsekerek
                     }
 
                     /* Get user input */
-                    int correct = -1;
+                    int correct = -1; // number of letters found by the player
                     Console.WriteLine();
-                    while (correct == -1)
+                    while (correct == -1) // invalid letter
                     {
                         ClearCurrentLine();
-                        Console.Write(currentPlayer + 1 + ". játékos, adj meg egy betűt " + String.Format(CI, "{0:C0}", spun) + "-ért: ");
-                        correct = board.Guess(Console.ReadKey().KeyChar);
+                        Console.Write(currentPlayer + 1 + ". játékos, adj meg egy mássalhangzót (" + String.Format(CI, "{0:C0}", spun) + "): ");
+                        correct = board.Guess(Console.ReadKey().KeyChar, false);
                     }
-                    if (correct > 0)
+                    if (correct > 0) // at least one letter found
                     {
                         players[currentPlayer].Add(spun * correct);
                     }
                     else
-                    if (correct == 0)
+                    if (correct == 0) // no letters found -> next player
                     {
                         currentPlayer++;
                         if (currentPlayer == players.Length)
@@ -198,6 +205,7 @@ namespace Szerencsekerek
                         }
                     }
                     else
+                    if (correct == -2) // player hit 1
                     {
                         ClearCurrentLine();
                         Console.Write(currentPlayer + 1 + ". játékos, add meg a megoldást " + String.Format(CI, "{0:C0}", players[currentPlayer].Winnings) + "-ért: ");
@@ -212,6 +220,14 @@ namespace Szerencsekerek
                         {
                             winner = currentPlayer;
                         }
+                    }
+                    else
+                    if (correct == -3) // player hit 2
+                    {
+                        players[currentPlayer].Subtract(vowelPrice);
+                        ClearCurrentLine();
+                        Console.Write(currentPlayer + 1 + ". játékos, adj meg egy betűt (" + String.Format(CI, "{0:C0}", spun) + "): ");
+                        board.Guess(Console.ReadKey().KeyChar, true);
                     }
                 } // while
                 /* Only the winner of the round gets to keep their points */
