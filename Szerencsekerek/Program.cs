@@ -119,10 +119,9 @@ namespace Szerencsekerek
     {
         static void Main(string[] args)
         {
+            /* Initialize the Game */
             System.Globalization.CultureInfo CI = new System.Globalization.CultureInfo("hu-HU");
-            Board board = new Board(System.IO.File.ReadAllLines("kozmondasok.txt"));
             Wheel wheel = new Wheel();
-            int currentPlayer = 0;
             Console.Write("Hány játékos játszik? ");
             int playerCount = int.Parse(Console.ReadLine());
             Player[] players = new Player[playerCount];
@@ -130,53 +129,54 @@ namespace Szerencsekerek
             {
                 players[i] = new Player();
             }
-            while (!board.gameOver)
+            int rounds = 3;
+            /* Console.Write("Hány kört játsszunk? ");
+            int rounds = int.Parse(Console.ReadLine()); */
+
+            /* Start the Game */
+            for (int i = 1; i <= rounds; i++)
             {
-                /* Spin the Wheel */
-                int spun = wheel.Spin();
-                if (spun == 0) {
-                    Console.Beep();
-                    spun = wheel.Spin();
-                    currentPlayer++;
-                    if (currentPlayer == players.Length)
+                Board board = new Board(System.IO.File.ReadAllLines("kozmondasok.txt"));
+                int currentPlayer = 0;
+                int winner = -1;
+                while (!board.gameOver)
+                {
+                    /* Spin the Wheel */
+                    int spun = wheel.Spin();
+                    while (spun == 0)
                     {
-                        currentPlayer = 0;
+                        Console.Beep();
+                        spun = wheel.Spin();
+                        currentPlayer++;
+                        if (currentPlayer == players.Length)
+                        {
+                            currentPlayer = 0;
+                        }
                     }
-                }
 
-                /* Draw the Puzzle Board and Standings */
-                Console.Clear();
-                board.Draw();
-                for (int i = 0; i < players.Length; i++)
-                {
-                    Console.WriteLine(i + 1 + ". játékos: " + String.Format(CI, "{0:C0}", players[i].Winnings));
-                }
-
-                /* Get user input */
-                int correct = -1;
-                Console.WriteLine();
-                while (correct == -1)
-                {
-                    ClearLastLine();
-                    Console.Write(currentPlayer + 1 + ". játékos, adj meg egy betűt " + String.Format(CI, "{0:C0}", spun) + "-ért: ");
-                    correct = board.Try(Console.ReadKey().KeyChar);
-                }
-                if (correct > 0)
-                {
-                    players[currentPlayer].Add(spun * correct);
-                } else
-                if (correct == 0)
-                {
-                    currentPlayer++;
-                    if (currentPlayer == players.Length)
+                    /* Draw the Puzzle Board and Standings */
+                    Console.Clear();
+                    board.Draw();
+                    for (int j = 0; j < players.Length; j++)
                     {
-                        currentPlayer = 0;
+                        Console.WriteLine(j + 1 + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings));
                     }
-                } else
-                {
-                    ClearLastLine();
-                    Console.Write(currentPlayer + 1 + ". játékos, add meg a megoldást " + String.Format(CI, "{0:C0}", players[currentPlayer].Winnings) + "-ért: ");
-                    if (!board.Try(Console.ReadLine()))
+
+                    /* Get user input */
+                    int correct = -1;
+                    Console.WriteLine();
+                    while (correct == -1)
+                    {
+                        ClearLastLine();
+                        Console.Write(currentPlayer + 1 + ". játékos, adj meg egy betűt " + String.Format(CI, "{0:C0}", spun) + "-ért: ");
+                        correct = board.Try(Console.ReadKey().KeyChar);
+                    }
+                    if (correct > 0)
+                    {
+                        players[currentPlayer].Add(spun * correct);
+                    }
+                    else
+                    if (correct == 0)
                     {
                         currentPlayer++;
                         if (currentPlayer == players.Length)
@@ -184,21 +184,45 @@ namespace Szerencsekerek
                             currentPlayer = 0;
                         }
                     }
+                    else
+                    {
+                        ClearLastLine();
+                        Console.Write(currentPlayer + 1 + ". játékos, add meg a megoldást " + String.Format(CI, "{0:C0}", players[currentPlayer].Winnings) + "-ért: ");
+                        if (!board.Try(Console.ReadLine()))
+                        {
+                            currentPlayer++;
+                            if (currentPlayer == players.Length)
+                            {
+                                currentPlayer = 0;
+                            }
+                        } else
+                        {
+                            winner = currentPlayer;
+                        }
+                    }
+                } // while
+                for (int j = 0; j < players.Length; j++)
+                {
+                    if (j != winner)
+                    {
+                        players[j].Reset();
+                    }
                 }
             }
+
+            /* Final Results */
             Console.Clear();
-            board.Draw();
-            int winner = 0;
+            int finalWinner = 0;
             for (int i = 0; i < players.Length; i++)
             {
                 Console.WriteLine(i + 1 + ". játékos: " + String.Format(CI, "{0:C0}", players[i].Winnings));
-                if (players[i].Winnings > players[winner].Winnings)
+                if (players[i].Winnings > players[finalWinner].Winnings)
                 {
-                    winner = i;
+                    finalWinner = i;
                 }
             }
             Console.WriteLine();
-            Console.WriteLine("Gratulálok, " + (winner + 1) + ". játékos, nyertél!");
+            Console.WriteLine("Gratulálok, " + (finalWinner + 1) + ". játékos, nyertél!");
             // Console.ReadKey();
         }
         public static void ClearLastLine()
