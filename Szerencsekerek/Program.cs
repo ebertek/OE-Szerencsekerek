@@ -88,18 +88,46 @@ namespace Szerencsekerek
         {
             System.Globalization.CultureInfo CI = new System.Globalization.CultureInfo("hu-HU");
             Board board = new Board(System.IO.File.ReadAllLines("kozmondasok.txt"));
-            board.Draw();
             Wheel wheel = new Wheel();
-            Person player1 = new Person();
+            // System.Collections.Generic.List<Person> players = new System.Collections.Generic.List<Person>();
+            int currentPlayer = 0;
+            Console.Write("Hány játékos játszik? ");
+            int playerCount = int.Parse(Console.ReadLine());
+            Person[] players = new Person[playerCount];
+            for (int i = 0; i < players.Length; i++)
+            {
+                players[i] = new Person();
+            }
+            //board.Draw();
             while (!board.gameOver)
             {
                 int Spun = wheel.Spin();
-                Console.Write("Adj meg egy betűt " + String.Format(CI, "{0:C0}", Spun) + "-ért: ");
-                player1.Winnings += Spun * board.Try(Console.ReadKey().KeyChar);
                 Console.Clear();
                 board.Draw();
+                for (int i = 0; i < players.Length; i++)
+                {
+                    Console.WriteLine(i + 1 + ". játékos: " + String.Format(CI, "{0:C0}", players[i].Winnings));
+                }
+                Console.Write(currentPlayer+1 + ". játékos, adj meg egy betűt " + String.Format(CI, "{0:C0}", Spun) + "-ért: ");
+                players[currentPlayer].Winnings += Spun * board.Try(Console.ReadKey().KeyChar);
+                currentPlayer++;
+                if (currentPlayer == players.Length)
+                {
+                    currentPlayer = 0;
+                }
             }
-            Console.WriteLine("Gratulálok, nyertél! Nyereményed: " + String.Format(CI, "{0:C0}", player1.Winnings));
+            Console.Clear();
+            board.Draw();
+            int winner = 0;
+            for (int i = 0; i < players.Length; i++)
+            {
+                Console.WriteLine(i + 1 + ". játékos: " + String.Format(CI, "{0:C0}", players[i].Winnings));
+                if (players[i].Winnings > players[winner].Winnings)
+                {
+                    winner = i;
+                }
+            }
+            Console.WriteLine("Gratulálok, " + (winner + 1) + ". játékos, nyertél!");
             // Console.ReadKey();
         }
     }
