@@ -13,10 +13,11 @@ namespace Szerencsekerek
     }
     class Board
     {
-        private string puzzle;
+        private readonly string puzzle;
         private const char mask = '-';
-        private bool[] solved;
-        private int length, done;
+        private readonly bool[] solved; // ?
+        private readonly int length;
+        private int done;
         public bool gameOver;
         public Board(string puzzle)
         {
@@ -72,9 +73,7 @@ namespace Szerencsekerek
                 }
             }
             done += Correct;
-            if (done >= length) {
-                gameOver = true;
-            }
+            gameOver |= done >= length;
             return Correct;
         }
     }
