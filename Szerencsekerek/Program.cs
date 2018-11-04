@@ -167,15 +167,15 @@ namespace Szerencsekerek
                 {
                     /* Spin the Wheel */
                     int spun = wheel.Spin();
-                    while (spun == 0)
+                    while (spun == 0) // if someone spins 0, they miss their turn
                     {
                         Console.Beep();
-                        spun = wheel.Spin();
                         currentPlayer++;
                         if (currentPlayer == players.Length)
                         {
                             currentPlayer = 0;
                         }
+                        spun = wheel.Spin();
                     }
 
                     /* Draw the Puzzle Board and Standings */
@@ -188,9 +188,9 @@ namespace Szerencsekerek
                     }
 
                     /* Get user input */
-                    int correct = -1; // number of letters found by the player
+                    int correct = int.MinValue; // number of letters found by the player
                     Console.WriteLine();
-                    while (correct == -1) // invalid letter
+                    while (correct == int.MinValue) // invalid letter
                     {
                         ClearCurrentLine();
                         Console.Write(currentPlayer + 1 + ". játékos, adj meg egy mássalhangzót (" + String.Format(CI, "{0:C0}", spun) + "): ");
@@ -216,6 +216,7 @@ namespace Szerencsekerek
                         Console.Write(currentPlayer + 1 + ". játékos, add meg a megoldást " + String.Format(CI, "{0:C0}", players[currentPlayer].Winnings) + "-ért: ");
                         if (!board.Guess(Console.ReadLine()))
                         {
+                            players[currentPlayer].Reset(); // if the player gets it wrong, they lose all their points
                             currentPlayer++;
                             if (currentPlayer == players.Length)
                             {
@@ -223,7 +224,7 @@ namespace Szerencsekerek
                             }
                         } else
                         {
-                            winner = currentPlayer;
+                            winner = currentPlayer; // board.gameOver is true, so we quit the main while loop
                         }
                     }
                     else
