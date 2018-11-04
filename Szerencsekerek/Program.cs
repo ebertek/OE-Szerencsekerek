@@ -79,7 +79,20 @@ namespace Szerencsekerek
     }
     class Person
     {
-        public int Winnings;
+        private int winnings;
+        public int Winnings
+        {
+            get { return winnings; }
+            /* set { winnings = value; } */
+        }
+        public void Add(int amount)
+        {
+            winnings += amount;
+        }
+        public void Reset()
+        {
+            winnings = 0;
+        }
     }
     class Program
     {
@@ -108,7 +121,7 @@ namespace Szerencsekerek
                     Console.WriteLine(i + 1 + ". játékos: " + String.Format(CI, "{0:C0}", players[i].Winnings));
                 }
                 Console.Write(currentPlayer+1 + ". játékos, adj meg egy betűt " + String.Format(CI, "{0:C0}", Spun) + "-ért: ");
-                players[currentPlayer].Winnings += Spun * board.Try(Console.ReadKey().KeyChar);
+                players[currentPlayer].Add(Spun * board.Try(Console.ReadKey().KeyChar));
                 currentPlayer++;
                 if (currentPlayer == players.Length)
                 {
