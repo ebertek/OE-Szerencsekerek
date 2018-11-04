@@ -77,7 +77,7 @@ namespace Szerencsekerek
             return Correct;
         }
     }
-    class Person
+    class Player
     {
         private int winnings;
         public int Winnings
@@ -101,14 +101,13 @@ namespace Szerencsekerek
             System.Globalization.CultureInfo CI = new System.Globalization.CultureInfo("hu-HU");
             Board board = new Board(System.IO.File.ReadAllLines("kozmondasok.txt"));
             Wheel wheel = new Wheel();
-            // System.Collections.Generic.List<Person> players = new System.Collections.Generic.List<Person>();
             int currentPlayer = 0;
             Console.Write("Hány játékos játszik? ");
             int playerCount = int.Parse(Console.ReadLine());
-            Person[] players = new Person[playerCount];
+            Player[] players = new Player[playerCount];
             for (int i = 0; i < players.Length; i++)
             {
-                players[i] = new Person();
+                players[i] = new Player();
             }
             //board.Draw();
             while (!board.gameOver)
