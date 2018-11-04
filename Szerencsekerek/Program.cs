@@ -114,9 +114,14 @@ namespace Szerencsekerek
         {
             winnings += amount;
         }
-        public void Subtract(int amount)
+        public bool Subtract(int amount)
         {
-            winnings -= amount;
+            if (winnings - amount >= 0)
+            {
+                winnings -= amount;
+                return true;
+            }
+            return false;
         }
         public void Reset()
         {
@@ -224,10 +229,13 @@ namespace Szerencsekerek
                     else
                     if (correct == -3) // player hit 2
                     {
-                        players[currentPlayer].Subtract(vowelPrice);
-                        ClearCurrentLine();
-                        Console.Write(currentPlayer + 1 + ". játékos, adj meg egy betűt (" + String.Format(CI, "{0:C0}", spun) + "): ");
-                        board.Guess(Console.ReadKey().KeyChar, true);
+                        if (players[currentPlayer].Subtract(vowelPrice))
+                        {
+                            ClearCurrentLine();
+                            Console.Write(currentPlayer + 1 + ". játékos, adj meg egy betűt: ");
+                            board.Guess(Console.ReadKey().KeyChar, true);
+                        }
+                        // TODO: Players shouldn't get a new spin if they wanted to buy a vowel but didn't have enough money for it
                     }
                 } // while
                 /* Only the winner of the round gets to keep their points */
