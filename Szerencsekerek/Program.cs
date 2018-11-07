@@ -201,22 +201,59 @@ namespace Szerencsekerek
                     }
 
                     /* Draw the Puzzle Board and Standings */
-                    Console.Clear();
-                    Console.WriteLine(i + ". kör \t\t 1) Megoldás 2) Magánhangzó vásárlása (" + String.Format(CI, "{0:C0}", vowelPrice) + ")");
-                    board.Draw();
-                    for (int j = 0; j < players.Length; j++)
+                    void ReDraw()
                     {
-                        Console.WriteLine(j + 1 + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings));
+                        Console.Clear();
+                        Console.WriteLine(i + ". kör \t\t 1) Megoldás 2) Magánhangzó vásárlása (" + String.Format(CI, "{0:C0}", vowelPrice) + ")");
+                        board.Draw();
+                        for (int j = 0; j < players.Length; j++)
+                        {
+                            Console.WriteLine(j + 1 + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings));
+                        }
+                        Console.WriteLine();
                     }
+                    ReDraw();
 
                     /* Get user input */
                     int correct = int.MinValue; // number of letters found by the player
-                    Console.WriteLine();
                     while (correct == int.MinValue) // invalid letter
                     {
-                        ClearCurrentLine();
-                        Console.Write(currentPlayer + 1 + ". játékos, adj meg egy mássalhangzót (" + String.Format(CI, "{0:C0}", spun) + "): ");
-                        correct = board.Guess(Console.ReadKey().KeyChar, false);
+                        while (correct < 0)
+                        {
+                            ClearCurrentLine();
+                            Console.Write(currentPlayer + 1 + ". játékos, adj meg egy mássalhangzót (" + String.Format(CI, "{0:C0}", spun) + "): ");
+                            char playerGuess = Console.ReadKey().KeyChar;
+                            correct = board.Guess(playerGuess, false);
+                            if (correct == -2) // player hit 1
+                            {
+                                ClearCurrentLine();
+                                Console.Write(currentPlayer + 1 + ". játékos, add meg a megoldást " + String.Format(CI, "{0:C0}", players[currentPlayer].Winnings) + "-ért: ");
+                                if (!board.Guess(Console.ReadLine()))
+                                {
+                                    correct = 0;
+                                    players[currentPlayer].Reset(); // if the player gets it wrong, they lose all their points
+                                    if (++currentPlayer == players.Length)
+                                    {
+                                        currentPlayer = 0;
+                                    }
+                                } else
+                                {
+                                    correct = 0;
+                                    winner = currentPlayer; // board.gameOver is true, so we quit the main while loop
+                                }
+                                ReDraw();
+                            } else
+                            if (correct == -3) // player hit 2
+                            {
+                                if (players[currentPlayer].Subtract(vowelPrice))
+                                {
+                                    ClearCurrentLine();
+                                    Console.Write(currentPlayer + 1 + ". játékos, adj meg egy betűt: ");
+                                    board.Guess(Console.ReadKey().KeyChar, true);
+                                }
+                                ReDraw();
+                            }
+                        }
                     }
                     if (correct > 0) // at least one letter found
                     {
@@ -229,34 +266,6 @@ namespace Szerencsekerek
                         {
                             currentPlayer = 0;
                         }
-                    }
-                    else
-                    if (correct == -2) // player hit 1
-                    {
-                        ClearCurrentLine();
-                        Console.Write(currentPlayer + 1 + ". játékos, add meg a megoldást " + String.Format(CI, "{0:C0}", players[currentPlayer].Winnings) + "-ért: ");
-                        if (!board.Guess(Console.ReadLine()))
-                        {
-                            players[currentPlayer].Reset(); // if the player gets it wrong, they lose all their points
-                            if (++currentPlayer == players.Length)
-                            {
-                                currentPlayer = 0;
-                            }
-                        } else
-                        {
-                            winner = currentPlayer; // board.gameOver is true, so we quit the main while loop
-                        }
-                    }
-                    else
-                    if (correct == -3) // player hit 2
-                    {
-                        if (players[currentPlayer].Subtract(vowelPrice))
-                        {
-                            ClearCurrentLine();
-                            Console.Write(currentPlayer + 1 + ". játékos, adj meg egy betűt: ");
-                            board.Guess(Console.ReadKey().KeyChar, true);
-                        }
-                        // TODO: Players shouldn't get a new spin if they wanted to buy a vowel but didn't have enough money for it
                     }
                 } // while
                 /* Only the winner of the round gets to keep their points */
