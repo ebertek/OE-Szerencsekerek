@@ -235,6 +235,11 @@ namespace Szerencsekerek
                                     ClearCurrentLine();
                                     Console.Write(currentPlayer + 1 + ". játékos, adj meg egy betűt: ");
                                     board.Guess(Console.ReadKey().KeyChar, true);
+                                    if (board.GameOver)
+                                    {
+                                        correct = 0;
+                                        winner = currentPlayer;
+                                    }
                                 }
                                 ReDraw();
                             }
