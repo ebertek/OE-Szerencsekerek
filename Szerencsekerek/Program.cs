@@ -91,6 +91,11 @@ namespace Szerencsekerek
             {
                 return -(int)char.GetNumericValue(letter)-1; // Special functions
             } else
+            if ((ConsoleKey)letter == ConsoleKey.Escape) // Esc exits the app
+            {
+                Environment.Exit(0);
+                return -1;
+            } else
             {
                 Console.Beep();
                 return -1; // Vowel / unacceptable character
@@ -139,7 +144,7 @@ namespace Szerencsekerek
             Wheel wheel = new Wheel(husz);
             int playerCount = 3;
             /* Console.Write("Hány játékos játszik? ");
-            int playerCount = int.Parse(Console.ReadLine()); */
+            playerCount = int.Parse(Console.ReadLine()); */
             Player[] players = new Player[playerCount];
             for (int i = 0; i < players.Length; i++)
             {
@@ -147,7 +152,7 @@ namespace Szerencsekerek
             }
             int rounds = 3;
             /* Console.Write("Hány kört játsszunk? ");
-            int rounds = int.Parse(Console.ReadLine()); */
+            rounds = int.Parse(Console.ReadLine()); */
 
             string fileName = "kozmondasok.txt";
             if (args.Length != 0)
@@ -235,7 +240,7 @@ namespace Szerencsekerek
                                     ClearCurrentLine();
                                     Console.Write(currentPlayer + 1 + ". játékos, adj meg egy betűt: ");
                                     board.Guess(Console.ReadKey().KeyChar, true);
-                                    if (board.GameOver)
+                                    if (board.GameOver) // if someone buys the last missing vowel instead of solving the puzzle, they still win the game
                                     {
                                         correct = 0;
                                         winner = currentPlayer;
