@@ -5,24 +5,40 @@ namespace Szerencsekerek
     class Wheel
     {
         private readonly int[] layout;
+        private readonly static Random rnd = new Random();
+
         public Wheel(int[] layout)
         {
             this.layout = layout;
         }
         public int Spin()
         {
-            Random rnd = new Random();
             return layout[rnd.Next(layout.Length)];
         }
     }
     class Board
     {
         private readonly string puzzle;
-        private const char mask = '-';
+        //private const char mask = '-';
+        private const string mask = "💩"; // UTF-32 karakterek nem férnek bele egy char-ba
         private readonly bool[] solved;
         private readonly int length;
+        private readonly static Random rnd = new Random();
         private int done;
-        public bool gameOver;
+        private bool gameOver;
+
+        public bool GameOver
+        {
+            get
+            {
+                return gameOver;
+            }
+            private set
+            {
+                gameOver = value;
+            }
+        }
+
         public Board(string puzzle)
         {
             this.puzzle = puzzle.ToUpper();
@@ -32,7 +48,6 @@ namespace Szerencsekerek
         }
         public Board(string[] puzzles)
         {
-            Random rnd = new Random();
             puzzle = puzzles[rnd.Next(puzzles.Length)].ToUpper();
             length = puzzle.Length;
             solved = new bool[length];
@@ -160,10 +175,17 @@ namespace Szerencsekerek
             /* Start the Game */
             for (int i = 1; i <= rounds; i++)
             {
-                Board board = new Board(System.IO.File.ReadAllLines(fileName));
+                Board board;
+                if (System.IO.File.Exists(fileName))
+                {
+                    board = new Board(System.IO.File.ReadAllLines(fileName));
+                } else
+                {
+                    board = new Board("Nem mindegy, hogy hol szorít a cipő"); // example from the original assignment
+                }
                 int currentPlayer = 0;
                 int winner = -1;
-                while (!board.gameOver)
+                while (!board.GameOver)
                 {
                     /* Spin the Wheel */
                     int spun = wheel.Spin();
@@ -203,8 +225,7 @@ namespace Szerencsekerek
                     else
                     if (correct == 0) // no letters found -> next player
                     {
-                        currentPlayer++;
-                        if (currentPlayer == players.Length)
+                        if (++currentPlayer == players.Length)
                         {
                             currentPlayer = 0;
                         }
@@ -217,8 +238,7 @@ namespace Szerencsekerek
                         if (!board.Guess(Console.ReadLine()))
                         {
                             players[currentPlayer].Reset(); // if the player gets it wrong, they lose all their points
-                            currentPlayer++;
-                            if (currentPlayer == players.Length)
+                            if (++currentPlayer == players.Length)
                             {
                                 currentPlayer = 0;
                             }
