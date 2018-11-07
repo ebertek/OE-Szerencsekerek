@@ -4,8 +4,8 @@ namespace Szerencsekerek
 {
     class Wheel
     {
-        private readonly int[] layout;
-        private readonly static Random rnd = new Random();
+        private readonly int[] layout; // wheel layout
+        private readonly static Random rnd = new Random(); // rng for spinning the wheel
 
         public Wheel(int[] layout)
         {
@@ -18,15 +18,14 @@ namespace Szerencsekerek
     }
     class Board
     {
-        private readonly string puzzle;
-        //private const char mask = '-';
-        private const string mask = "💩"; // UTF-32 karakterek nem férnek bele egy char-ba
-        private readonly bool[] solved;
-        private readonly int length;
-        private readonly static Random rnd = new Random();
-        private int done;
-
-        public bool GameOver { get; private set; }
+        private readonly string puzzle; // the actual puzzle to solve
+        private readonly int length; // length of the puzzle
+        // private const char mask = '-'; // masking character
+        private const string mask = "💩"; // UTF-32 characters don't fit in a char
+        private readonly bool[] solved; // true/false for every character in the puzzle
+        private readonly static Random rnd = new Random(); // rng for selecting a line from a list of puzzles
+        private int done; // number of characters in the puzzle already solved
+        public bool GameOver { get; private set; } // true if the puzzle is solved
 
         public Board(string puzzle)
         {
@@ -42,7 +41,7 @@ namespace Szerencsekerek
             solved = new bool[length];
             Normalize();
         }
-        private void Normalize()
+        private void Normalize() // special characters in the puzzle (like ,) should be shown (="solved") by default
         {
             for (int i = 0; i < length; i++)
             {
@@ -53,7 +52,7 @@ namespace Szerencsekerek
                 }
             }
         }
-        public void Draw()
+        public void Draw() // draw the current puzzle board with the unsolved letters masked
         {
             for (int i = 0; i < length; i++)
             {
@@ -108,28 +107,23 @@ namespace Szerencsekerek
     }
     class Player
     {
-        private int winnings;
-        public int Winnings
+        public int Winnings { get; private set; } // number of points the player has
+        public void Add(int amount) // add points
         {
-            get { return winnings; }
-            /* set { winnings = value; } */
+            Winnings += amount;
         }
-        public void Add(int amount)
+        public bool Subtract(int amount) // subtract points if possible
         {
-            winnings += amount;
-        }
-        public bool Subtract(int amount)
-        {
-            if (winnings - amount >= 0)
+            if (Winnings - amount >= 0)
             {
-                winnings -= amount;
+                Winnings -= amount;
                 return true;
             }
             return false;
         }
-        public void Reset()
+        public void Reset() // lose all points
         {
-            winnings = 0;
+            Winnings = 0;
         }
     }
     class Program
@@ -211,8 +205,7 @@ namespace Szerencsekerek
                         {
                             ClearCurrentLine();
                             Console.Write(currentPlayer + 1 + ". játékos, adj meg egy mássalhangzót (" + String.Format(CI, "{0:C0}", spun) + "): ");
-                            char playerGuess = Console.ReadKey().KeyChar;
-                            correct = board.Guess(playerGuess, false);
+                            correct = board.Guess(Console.ReadKey().KeyChar, false);
                             if (correct == -2) // player hit 1
                             {
                                 ClearCurrentLine();
