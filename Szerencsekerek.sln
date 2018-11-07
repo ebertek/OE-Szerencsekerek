@@ -27,6 +27,7 @@ Global
 		$4.FileWidth = 80
 		$4.TabsToSpaces = True
 		$4.scope = text/plain
+		$4.EolMarker = Windows
 		$0.VersionControlPolicy = $5
 		$0.StandardHeader = $6
 		version = 0.3
