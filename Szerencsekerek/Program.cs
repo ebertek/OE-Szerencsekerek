@@ -34,9 +34,11 @@ namespace Szerencsekerek
             solved = new bool[length];
             Normalize();
         }
-        public Board(string[] puzzles)
+        public Board(ref string[] puzzles)
         {
-            puzzle = puzzles[rnd.Next(puzzles.Length)].ToUpper();
+            int i = rnd.Next(puzzles.Length);
+            puzzle = puzzles[i].ToUpper();
+            puzzles[i] = ""; // a line shouldn't come up more than once per game
             length = puzzle.Length;
             solved = new bool[length];
             Normalize();
@@ -152,6 +154,7 @@ namespace Szerencsekerek
             {
                 fileName = args[0];
             }
+            string[] puzzles = System.IO.File.ReadAllLines(fileName);
 
             const int vowelPrice = 5000;
 
@@ -161,7 +164,7 @@ namespace Szerencsekerek
                 Board board;
                 if (System.IO.File.Exists(fileName))
                 {
-                    board = new Board(System.IO.File.ReadAllLines(fileName));
+                    board = new Board(ref puzzles);
                 } else
                 {
                     board = new Board("Nem mindegy, hogy hol szorít a cipő"); // example from the original assignment
@@ -249,7 +252,7 @@ namespace Szerencsekerek
                             currentPlayer = 0;
                         }
                     }
-                } // while
+                } // while (!board.GameOver)
                 /* Only the winner of the round gets to keep their points */
                 for (int j = 0; j < players.Length; j++)
                 {
@@ -258,7 +261,7 @@ namespace Szerencsekerek
                         players[j].Reset();
                     }
                 }
-            }
+            } // for (int i = 1; i <= rounds; i++)
 
             /* Final Results */
             Console.Clear();
