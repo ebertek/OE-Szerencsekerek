@@ -25,19 +25,8 @@ namespace Szerencsekerek
         private readonly int length;
         private readonly static Random rnd = new Random();
         private int done;
-        private bool gameOver;
 
-        public bool GameOver
-        {
-            get
-            {
-                return gameOver;
-            }
-            private set
-            {
-                gameOver = value;
-            }
-        }
+        public bool GameOver { get; private set; }
 
         public Board(string puzzle)
         {
@@ -94,7 +83,7 @@ namespace Szerencsekerek
                     }
                 }
                 done += Correct;
-                gameOver |= done >= length;
+                GameOver |= done >= length;
                 return Correct;
             } else
             if (Char.IsDigit(letter))
@@ -109,7 +98,7 @@ namespace Szerencsekerek
         public bool Guess(string solution)
         {
             if (string.Equals(solution, puzzle, StringComparison.InvariantCultureIgnoreCase)) {
-                gameOver = true;
+                GameOver = true;
                 return true;
             } else
             {
