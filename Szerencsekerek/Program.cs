@@ -37,11 +37,10 @@ namespace Szerencsekerek
         public Board(ref string[] puzzles)
         {
             int i;
-            string allPuzzles;
             do
             {
-                allPuzzles = String.Join("", puzzles);
-                if (String.IsNullOrWhiteSpace(allPuzzles)) {
+                if (Array.TrueForAll(puzzles, String.IsNullOrWhiteSpace))
+                {
                     Console.WriteLine("Hiba: nincs elég megoldandó feladvány a bemeneti fájlban.");
                     Environment.Exit(-1);
                 }
