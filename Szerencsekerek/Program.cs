@@ -36,12 +36,23 @@ namespace Szerencsekerek
         }
         public Board(ref string[] puzzles)
         {
-            int i = rnd.Next(puzzles.Length);
-            puzzle = puzzles[i].ToUpper();
-            puzzles[i] = ""; // a line shouldn't come up more than once per game
-            length = puzzle.Length;
-            solved = new bool[length];
-            Normalize();
+            int i;
+            string allPuzzles;
+            do
+            {
+                allPuzzles = String.Join("", puzzles);
+                if (String.IsNullOrWhiteSpace(allPuzzles)) {
+                    Console.WriteLine("Hiba: nincs elég megoldandó feladvány a bemeneti fájlban.");
+                    Environment.Exit(-1);
+                }
+                i = rnd.Next(puzzles.Length);
+                puzzle = puzzles[i].ToUpper();
+                puzzles[i] = ""; // a line shouldn't come up more than once per game
+                done = 0;
+                length = puzzle.Length;
+                solved = new bool[length];
+                Normalize();
+            } while (String.IsNullOrWhiteSpace(puzzle) || done == length);
         }
         private void Normalize() // special characters in the puzzle (like ,) should be shown (="solved") by default
         {
@@ -53,6 +64,7 @@ namespace Szerencsekerek
                     done++;
                 }
             }
+            GameOver = done >= length;
         }
         public void Draw() // draw the current puzzle board with the unsolved letters masked
         {
