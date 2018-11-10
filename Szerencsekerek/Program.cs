@@ -123,6 +123,40 @@ namespace Szerencsekerek
             }
         }
     }
+    class Shop
+    {
+        private readonly string[] items;
+        private readonly int[] prices;
+
+        public Shop()
+        {
+            items = new string[] { "Természetkalauz", "Képes albumok és lexikonok", "Elin Lux grillsütős gáztűzhely", "Ramses édességek", "Camey ajándékcsomag", "Electrolux ZL620 porszívó", "Aroma kávédaráló", "3 darab 195 perces videokazetta", "Neutralia csomag", "Golf Junior fűnyíró" };
+            prices = new int[] { 4630, 13710, 49900, 900, 2500, 14900, 1299, 1080, 3000, 16490 };
+
+        }
+        public string Item(int index)
+        {
+            return items[index];
+        }
+        public int Price(int index)
+        {
+            return prices[index];
+        }
+        public int Length()
+        {
+            return items.Length;
+        }
+        public override string ToString()
+        {
+            string ListOfItems = "";
+            System.Globalization.CultureInfo CI = new System.Globalization.CultureInfo("hu-HU");
+            for (int i = 0; i < items.Length; i++)
+            {
+                ListOfItems += items[i] + ", " + String.Format(CI, "{0:C0}", prices[i]) + "\r\n";
+            }
+            return ListOfItems;
+        }
+    }
     class Player
     {
         public int Winnings { get; private set; } // number of points the player has
@@ -139,6 +173,10 @@ namespace Szerencsekerek
             }
             return false;
         }
+        public bool Buy(Shop shop, int index) // buy an item from the shop
+        {
+            return Subtract(shop.Price(index));
+        }
         public void Reset() // lose all points
         {
             Winnings = 0;
@@ -150,9 +188,10 @@ namespace Szerencsekerek
         {
             /* Initialize the Game */
             System.Globalization.CultureInfo CI = new System.Globalization.CultureInfo("hu-HU");
-            /* int[] MTV = new int[] { 0, 1700, 5500, 1100, 6000, 1100, 2000, 1100, 1500, 5500, 1300, 4000, 900, 1100, 11000, 1600, 1200, 4000, 1500, 1200, 6000, 1000, 13000 }; */
+            // int[] MTV = new int[] { 0, 1700, 5500, 1100, 6000, 1100, 2000, 1100, 1500, 5500, 1300, 4000, 900, 1100, 11000, 1600, 1200, 4000, 1500, 1200, 6000, 1000, 13000 };
             int[] husz = { 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000 };
             Wheel wheel = new Wheel(husz);
+            Shop shop = new Shop();
             int playerCount = 3;
             /* Console.Write("Hány játékos játszik? ");
             playerCount = int.Parse(Console.ReadLine()); */
@@ -187,6 +226,18 @@ namespace Szerencsekerek
                 }
                 int currentPlayer = 0;
                 int winner = -1;
+                /* Draw the Puzzle Board and Standings */
+                void ReDraw()
+                {
+                    Console.Clear();
+                    Console.WriteLine(i + ". kör \t\t 1) Megoldás 2) Magánhangzó vásárlása (" + String.Format(CI, "{0:C0}", vowelPrice) + ")");
+                    board.Draw();
+                    for (int j = 0; j < players.Length; j++)
+                    {
+                        Console.WriteLine(j + 1 + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings));
+                    }
+                    Console.WriteLine();
+                }
                 while (!board.GameOver)
                 {
                     /* Spin the Wheel */
@@ -203,17 +254,6 @@ namespace Szerencsekerek
                     }
 
                     /* Draw the Puzzle Board and Standings */
-                    void ReDraw()
-                    {
-                        Console.Clear();
-                        Console.WriteLine(i + ". kör \t\t 1) Megoldás 2) Magánhangzó vásárlása (" + String.Format(CI, "{0:C0}", vowelPrice) + ")");
-                        board.Draw();
-                        for (int j = 0; j < players.Length; j++)
-                        {
-                            Console.WriteLine(j + 1 + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings));
-                        }
-                        Console.WriteLine();
-                    }
                     ReDraw();
 
                     /* Get user input */
@@ -282,6 +322,11 @@ namespace Szerencsekerek
                         players[j].Reset();
                     }
                 }
+                ReDraw();
+                Console.WriteLine("A " + (winner + 1) + ". játékos vásárolhat a kirakatból:");
+                Console.WriteLine(shop.ToString());
+                int index = int.Parse(Console.ReadLine());
+                players[winner].Buy(shop, index);
             } // for (int i = 1; i <= rounds; i++)
 
             /* Final Results */
