@@ -141,11 +141,34 @@ namespace Szerencsekerek
         }
         public string Item(int index)
         {
-            return items[index];
+            if (index > 0 && index < items.Length)
+            {
+                return items[index];
+            } else
+            {
+                return "";
+            }
         }
         public int Price(int index)
         {
-            return prices[index];
+            if (index > 0 && index < prices.Length)
+            {
+                return prices[index];
+            } else
+            {
+                return -1;
+            }
+        }
+        public int LowestPrice()
+        {
+            int min = prices[0];
+            for (int i = 1; i < prices.Length; i++)
+            {
+                if (prices[i] < min) {
+                    min = prices[i];
+                }
+            }
+            return min;
         }
         public int Length()
         {
@@ -157,7 +180,7 @@ namespace Szerencsekerek
             System.Globalization.CultureInfo CI = new System.Globalization.CultureInfo("hu-HU");
             for (int i = 0; i < items.Length; i++)
             {
-                ListOfItems += items[i] + ", " + String.Format(CI, "{0:C0}", prices[i]) + "\r\n";
+                ListOfItems += (i+1) + ") " + items[i] + ", " + String.Format(CI, "{0:C0}", prices[i]) + "\n";
             }
             return ListOfItems;
         }
@@ -232,7 +255,7 @@ namespace Szerencsekerek
                 int currentPlayer = 0;
                 int winner = -1;
                 /* Draw the Puzzle Board and Standings */
-                void ReDraw()
+                void ReDraw(bool includeShop)
                 {
                     Console.Clear();
                     Console.WriteLine(i + ". kör \t\t 1) Megoldás 2) Magánhangzó vásárlása (" + String.Format(CI, "{0:C0}", vowelPrice) + ")");
@@ -242,6 +265,12 @@ namespace Szerencsekerek
                         Console.WriteLine(j + 1 + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings));
                     }
                     Console.WriteLine();
+                    if (includeShop)
+                    {
+                        Console.WriteLine("A " + (winner + 1) + ". játékos vásárolhat a kirakatból:");
+                        Console.WriteLine(shop.ToString());
+                        Console.WriteLine("0) Tovább");
+                    }
                 }
                 while (!board.GameOver)
                 {
@@ -259,7 +288,7 @@ namespace Szerencsekerek
                     }
 
                     /* Draw the Puzzle Board and Standings */
-                    ReDraw();
+                    ReDraw(false);
 
                     /* Get user input */
                     int correct = int.MinValue; // number of letters found by the player
@@ -287,7 +316,7 @@ namespace Szerencsekerek
                                     correct = 0;
                                     winner = currentPlayer; // board.gameOver is true, so we quit the main while loop
                                 }
-                                ReDraw();
+                                ReDraw(false);
                             } else
                             if (correct == -3) // player hit 2
                             {
@@ -302,7 +331,7 @@ namespace Szerencsekerek
                                         winner = currentPlayer;
                                     }
                                 }
-                                ReDraw();
+                                ReDraw(false);
                             }
                         }
                     }
@@ -327,11 +356,15 @@ namespace Szerencsekerek
                         players[j].Reset();
                     }
                 }
-                ReDraw();
-                Console.WriteLine("A " + (winner + 1) + ". játékos vásárolhat a kirakatból:");
-                Console.WriteLine(shop.ToString());
-                int index = int.Parse(Console.ReadLine());
-                players[winner].Buy(shop, index);
+                /* Shop */
+                ReDraw(true);
+                int index = int.MinValue;
+                while (index != -1 && players[winner].Winnings >= shop.LowestPrice())
+                {
+                    index = int.Parse(Console.ReadLine()) - 1;
+                    players[winner].Buy(shop, index);
+                    ReDraw(true);
+                }
             } // for (int i = 1; i <= rounds; i++)
 
             /* Final Results */
