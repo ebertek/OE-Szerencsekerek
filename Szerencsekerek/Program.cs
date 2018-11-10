@@ -169,10 +169,10 @@ namespace Szerencsekerek
         }
         public int LowestPrice()
         {
-            int min = prices[0];
-            for (int i = 1; i < prices.Length; i++)
+            int min = int.MaxValue;
+            for (int i = 0; i < prices.Length; i++)
             {
-                if (prices[i] < min) {
+                if (prices[i] > 0 && prices[i] < min) {
                     min = prices[i];
                 }
             }
@@ -185,7 +185,7 @@ namespace Szerencsekerek
         public override string ToString()
         {
             string ListOfItems = "";
-            System.Globalization.CultureInfo CI = new System.Globalization.CultureInfo("hu-HU");
+            System.Globalization.CultureInfo CI = new System.Globalization.CultureInfo("hu-HU"); // TODO: Use the same CI everywhere
             for (int i = 0; i < items.Length; i++)
             {
                 if (items[i] != "")
@@ -216,7 +216,8 @@ namespace Szerencsekerek
         }
         public bool Buy(Shop shop, int index) // buy an item from the shop
         {
-            if (Subtract(shop.Price(index)))
+            int price = shop.Price(index);
+            if (price > 0 && Subtract(price))
             {
                 Prizes.Add(shop.Item(index));
                 shop.Buy(index);
