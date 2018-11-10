@@ -141,7 +141,7 @@ namespace Szerencsekerek
         }
         public string Item(int index)
         {
-            if (index > 0 && index < items.Length)
+            if (index >= 0 && index < items.Length)
             {
                 return items[index];
             } else
@@ -151,12 +151,20 @@ namespace Szerencsekerek
         }
         public int Price(int index)
         {
-            if (index > 0 && index < prices.Length)
+            if (index >= 0 && index < prices.Length)
             {
                 return prices[index];
             } else
             {
-                return -1;
+                return 0;
+            }
+        }
+        public void Buy(int index)
+        {
+            if (index >= 0 && index < items.Length)
+            {
+                items[index] = "";
+                prices[index] = 0;
             }
         }
         public int LowestPrice()
@@ -180,7 +188,10 @@ namespace Szerencsekerek
             System.Globalization.CultureInfo CI = new System.Globalization.CultureInfo("hu-HU");
             for (int i = 0; i < items.Length; i++)
             {
-                ListOfItems += (i+1) + ") " + items[i] + ", " + String.Format(CI, "{0:C0}", prices[i]) + "\n";
+                if (items[i] != "")
+                {
+                    ListOfItems += (i + 1) + ") " + items[i] + ", " + String.Format(CI, "{0:C0}", prices[i]) + "\n";
+                }
             }
             return ListOfItems;
         }
@@ -188,6 +199,8 @@ namespace Szerencsekerek
     class Player
     {
         public int Winnings { get; private set; } // number of points the player has
+        public System.Collections.Generic.List<string> Prizes { get; } = new System.Collections.Generic.List<string>(); // prizes bought by the player
+
         public void Add(int amount) // add points
         {
             Winnings += amount;
@@ -203,7 +216,15 @@ namespace Szerencsekerek
         }
         public bool Buy(Shop shop, int index) // buy an item from the shop
         {
-            return Subtract(shop.Price(index));
+            if (Subtract(shop.Price(index)))
+            {
+                Prizes.Add(shop.Item(index));
+                shop.Buy(index);
+                return true;
+            } else
+            {
+                return false;
+            }
         }
         public void Reset() // lose all points
         {
@@ -262,7 +283,8 @@ namespace Szerencsekerek
                     board.Draw();
                     for (int j = 0; j < players.Length; j++)
                     {
-                        Console.WriteLine(j + 1 + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings));
+                        // Console.WriteLine((j + 1) + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings));
+                        Console.WriteLine((j + 1) + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings) + " " + String.Join(", ", players[j].Prizes));
                     }
                     Console.WriteLine();
                     if (includeShop)
@@ -361,6 +383,7 @@ namespace Szerencsekerek
                 int index = int.MinValue;
                 while (index != -1 && players[winner].Winnings >= shop.LowestPrice())
                 {
+                    Console.Write("Választott termék: ");
                     index = int.Parse(Console.ReadLine()) - 1;
                     players[winner].Buy(shop, index);
                     ReDraw(true);
@@ -380,6 +403,10 @@ namespace Szerencsekerek
             }
             Console.WriteLine();
             Console.WriteLine("Gratulálok, " + (finalWinner + 1) + ". játékos, nyertél!");
+            for (int i = 0; i < players.Length; i++)
+            {
+                Console.WriteLine((i + 1) + ". játékos: " + String.Format(CI, "{0:C0}", players[i].Winnings) + " " + String.Join(", ", players[i].Prizes));
+            }
             // Console.ReadKey();
         }
         static void ClearCurrentLine()
