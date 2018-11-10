@@ -284,7 +284,19 @@ namespace Szerencsekerek
                     for (int j = 0; j < players.Length; j++)
                     {
                         // Console.WriteLine((j + 1) + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings));
+                        if ((j+1) % 3 == 0)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                        } else
+                        if ((j+1) % 2 == 0)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                        } else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                        }
                         Console.WriteLine((j + 1) + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings) + " " + String.Join(", ", players[j].Prizes));
+                        Console.ResetColor();
                     }
                     Console.WriteLine();
                     if (includeShop)
@@ -395,7 +407,7 @@ namespace Szerencsekerek
             int finalWinner = 0;
             for (int i = 0; i < players.Length; i++)
             {
-                Console.WriteLine(i + 1 + ". játékos: " + String.Format(CI, "{0:C0}", players[i].Winnings));
+                Console.WriteLine((i + 1) + ". játékos: " + String.Format(CI, "{0:C0}", players[i].Winnings) + " " + String.Join(", ", players[i].Prizes));
                 if (players[i].Winnings > players[finalWinner].Winnings)
                 {
                     finalWinner = i;
@@ -403,10 +415,6 @@ namespace Szerencsekerek
             }
             Console.WriteLine();
             Console.WriteLine("Gratulálok, " + (finalWinner + 1) + ". játékos, nyertél!");
-            for (int i = 0; i < players.Length; i++)
-            {
-                Console.WriteLine((i + 1) + ". játékos: " + String.Format(CI, "{0:C0}", players[i].Winnings) + " " + String.Join(", ", players[i].Prizes));
-            }
             // Console.ReadKey();
         }
         static void ClearCurrentLine()
