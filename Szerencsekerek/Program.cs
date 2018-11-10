@@ -115,6 +115,11 @@ namespace Szerencsekerek
         public bool Guess(string solution)
         {
             if (string.Equals(solution, puzzle, StringComparison.InvariantCultureIgnoreCase)) {
+                for (int i = 0; i < length; i++)
+                {
+                    solved[i] = true;
+                }
+                done = length;
                 GameOver = true;
                 return true;
             } else
