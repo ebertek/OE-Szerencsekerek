@@ -314,8 +314,7 @@ namespace Szerencsekerek
                     while (spun == 0) // if someone spins 0, they miss their turn
                     {
                         Console.Beep();
-                        currentPlayer++;
-                        if (currentPlayer == players.Length)
+                        if (++currentPlayer == players.Length)
                         {
                             currentPlayer = 0;
                         }
@@ -342,10 +341,6 @@ namespace Szerencsekerek
                                 {
                                     correct = 0;
                                     players[currentPlayer].Reset(); // if the player gets it wrong, they lose all their points
-                                    if (++currentPlayer == players.Length)
-                                    {
-                                        currentPlayer = 0;
-                                    }
                                 } else
                                 {
                                     correct = 0;
