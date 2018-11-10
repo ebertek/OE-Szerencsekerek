@@ -30,7 +30,7 @@ Global
 		$4.EolMarker = Windows
 		$0.VersionControlPolicy = $5
 		$0.StandardHeader = $6
-		version = 0.4
+		version = 0.5
 		description = Wheel of Fortune
 	EndGlobalSection
 EndGlobal
