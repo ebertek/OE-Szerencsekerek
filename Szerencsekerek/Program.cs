@@ -288,7 +288,7 @@ namespace Szerencsekerek
                         {
                             Console.ForegroundColor = ConsoleColor.Green;
                         } else
-                        if ((j+1) % 2 == 0)
+                        if ((j+1) % 3 == 2)
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
                         } else
