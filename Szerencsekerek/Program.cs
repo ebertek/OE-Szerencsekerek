@@ -97,13 +97,12 @@ namespace Szerencsekerek
                 done += Correct;
                 GameOver |= done >= length;
                 return Correct;
-            } else
-            if (Char.IsDigit(letter))
+            } else if (Char.IsDigit(letter))
             {
                 return -(int)char.GetNumericValue(letter)-1; // Special functions
-            } else
-            if ((ConsoleKey)letter == ConsoleKey.Escape) // Esc exits the app
+            } else if ((ConsoleKey)letter == ConsoleKey.Escape) // Esc exits the app
             {
+                // TODO: Esc eats the next character
                 Environment.Exit(0);
                 return -1;
             } else
@@ -242,9 +241,9 @@ namespace Szerencsekerek
             int[] husz = { 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000 };
             Wheel wheel = new Wheel(husz);
             Shop shop = new Shop();
-            int playerCount = 3;
+            const int playerCount = 3;
             /* Console.Write("Hány játékos játszik? ");
-            playerCount = int.Parse(Console.ReadLine()); */
+            int playerCount = int.Parse(Console.ReadLine()); */
             Player[] players = new Player[playerCount];
             for (int i = 0; i < players.Length; i++)
             {
@@ -288,8 +287,7 @@ namespace Szerencsekerek
                         if ((j+1) % 3 == 0)
                         {
                             Console.ForegroundColor = ConsoleColor.Green;
-                        } else
-                        if ((j+1) % 3 == 2)
+                        } else if ((j+1) % 3 == 2)
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
                         } else
@@ -347,8 +345,7 @@ namespace Szerencsekerek
                                     winner = currentPlayer; // board.gameOver is true, so we quit the main while loop
                                 }
                                 ReDraw(false);
-                            } else
-                            if (correct == -3) // player hit 2
+                            } else if (correct == -3) // player hit 2
                             {
                                 if (players[currentPlayer].Subtract(vowelPrice))
                                 {
@@ -369,8 +366,7 @@ namespace Szerencsekerek
                     {
                         players[currentPlayer].Add(spun * correct);
                     }
-                    else
-                    if (correct == 0) // no letters found -> next player
+                    else if (correct == 0) // no letters found -> next player
                     {
                         if (++currentPlayer == players.Length)
                         {
@@ -407,8 +403,7 @@ namespace Szerencsekerek
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
                 }
-                else
-                if ((j + 1) % 3 == 2)
+                else if ((j + 1) % 3 == 2)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                 }
