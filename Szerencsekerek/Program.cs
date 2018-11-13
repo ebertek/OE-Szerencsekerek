@@ -20,8 +20,8 @@ namespace Szerencsekerek
     {
         private readonly string puzzle; // the actual puzzle to solve
         private readonly int length; // length of the puzzle
-        // private const char mask = '-'; // masking character
-        private const string mask = "💩"; // UTF-32 characters don't fit in a char
+        private const char mask = '-'; // masking character
+        // private const string mask = "💩"; // UTF-32 characters don't fit in a char
         private readonly bool[] solved; // true/false for every character in the puzzle
         private readonly static Random rnd = new Random(); // rng for selecting a line from a list of puzzles
         private int done; // number of characters in the puzzle already solved
@@ -249,9 +249,9 @@ namespace Szerencsekerek
             {
                 players[i] = new Player();
             }
-            int rounds = 3;
+            const int rounds = 3;
             /* Console.Write("Hány kört játsszunk? ");
-            rounds = int.Parse(Console.ReadLine()); */
+            int rounds = int.Parse(Console.ReadLine()); */
 
             string fileName = "kozmondasok.txt";
             if (args.Length != 0)
@@ -276,7 +276,7 @@ namespace Szerencsekerek
                 int currentPlayer = 0;
                 int winner = -1;
                 /* Draw the Puzzle Board and Standings */
-                void ReDraw(bool includeShop)
+                void ReDraw(bool includeShop) // TODO: Find a better place for this function
                 {
                     Console.Clear();
                     Console.WriteLine(i + ". kör \t\t 1) Megoldás 2) Magánhangzó vásárlása (" + String.Format(CI, "{0:C0}", vowelPrice) + ")");
@@ -420,7 +420,7 @@ namespace Szerencsekerek
             }
             Console.WriteLine();
             Console.WriteLine("Gratulálok, " + (finalWinner + 1) + ". játékos, nyertél!");
-            // Console.ReadKey();
+            Console.ReadKey();
         }
         static void ClearCurrentLine()
         {
