@@ -27,13 +27,6 @@ namespace Szerencsekerek
         private int done; // number of characters in the puzzle already solved
         public bool GameOver { get; private set; } // true if the puzzle is solved
 
-        public Board(string puzzle)
-        {
-            this.puzzle = puzzle.ToUpper();
-            length = puzzle.Length;
-            solved = new bool[length];
-            Normalize();
-        }
         public Board(ref string[] puzzles)
         {
             int i;
@@ -258,21 +251,21 @@ namespace Szerencsekerek
             {
                 fileName = args[0];
             }
-            string[] puzzles = System.IO.File.ReadAllLines(fileName);
+            string[] puzzles;
+            if (System.IO.File.Exists(fileName))
+            {
+                puzzles = System.IO.File.ReadAllLines(fileName);
+            } else
+            {
+                puzzles = new string[] { "Nem mindegy, hogy hol szorít a cipő" }; // example from the original assignment
+            }
 
             const int vowelPrice = 5000;
 
             /* Start the Game */
             for (int i = 1; i <= rounds; i++)
             {
-                Board board;
-                if (System.IO.File.Exists(fileName))
-                {
-                    board = new Board(ref puzzles);
-                } else
-                {
-                    board = new Board("Nem mindegy, hogy hol szorít a cipő"); // example from the original assignment
-                }
+                Board board = new Board(ref puzzles);
                 int currentPlayer = 0;
                 int winner = -1;
                 /* Draw the Puzzle Board and Standings */
