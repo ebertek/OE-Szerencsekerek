@@ -283,24 +283,14 @@ namespace Szerencsekerek
                     board.Draw();
                     for (int j = 0; j < players.Length; j++)
                     {
-                        // Console.WriteLine((j + 1) + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings));
-                        if ((j+1) % 3 == 0)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Green;
-                        } else if ((j+1) % 3 == 2)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                        } else
-                        {
-                            Console.ForegroundColor = ConsoleColor.Blue;
-                        }
-                        Console.WriteLine((j + 1) + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings) + " " + String.Join(", ", players[j].Prizes));
-                        Console.ResetColor();
+                        Console.WriteLine(SzinesJatekos(j) + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings) + " " + String.Join(", ", players[j].Prizes));
                     }
+                    Console.ResetColor();
                     Console.WriteLine();
                     if (includeShop)
                     {
-                        Console.WriteLine("A " + (winner + 1) + ". játékos vásárolhat a kirakatból:");
+                        Console.WriteLine("A " + SzinesJatekos(winner) + ". játékos vásárolhat a kirakatból:");
+                        Console.ResetColor();
                         Console.WriteLine(shop.ToString());
                         Console.WriteLine("0) Tovább");
                     }
@@ -329,12 +319,14 @@ namespace Szerencsekerek
                         while (correct < 0)
                         {
                             ClearCurrentLine();
-                            Console.Write(currentPlayer + 1 + ". játékos, adj meg egy mássalhangzót (" + String.Format(CI, "{0:C0}", spun) + "): ");
+                            Console.Write(SzinesJatekos(currentPlayer) + ". játékos, adj meg egy mássalhangzót (" + String.Format(CI, "{0:C0}", spun) + "): ");
+                            Console.ResetColor();
                             correct = board.Guess(Console.ReadKey().KeyChar, false);
                             if (correct == -2) // player hit 1
                             {
                                 ClearCurrentLine();
-                                Console.Write(currentPlayer + 1 + ". játékos, add meg a megoldást " + String.Format(CI, "{0:C0}", players[currentPlayer].Winnings) + "-ért: ");
+                                Console.Write(SzinesJatekos(currentPlayer) + ". játékos, add meg a megoldást " + String.Format(CI, "{0:C0}", players[currentPlayer].Winnings) + "-ért: ");
+                                Console.ResetColor();
                                 if (!board.Guess(Console.ReadLine()))
                                 {
                                     correct = 0;
@@ -350,7 +342,8 @@ namespace Szerencsekerek
                                 if (players[currentPlayer].Subtract(vowelPrice))
                                 {
                                     ClearCurrentLine();
-                                    Console.Write(currentPlayer + 1 + ". játékos, adj meg egy betűt: ");
+                                    Console.Write(SzinesJatekos(currentPlayer) + ". játékos, adj meg egy betűt: ");
+                                    Console.ResetColor();
                                     board.Guess(Console.ReadKey().KeyChar, true);
                                     if (board.GameOver) // if someone buys the last missing vowel instead of solving the puzzle, they still win the game
                                     {
@@ -399,19 +392,7 @@ namespace Szerencsekerek
             int finalWinner = 0;
             for (int j = 0; j < players.Length; j++)
             {
-                if ((j + 1) % 3 == 0)
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                }
-                else if ((j + 1) % 3 == 2)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                }
-                Console.WriteLine((j + 1) + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings) + " " + String.Join(", ", players[j].Prizes));
+                Console.WriteLine(SzinesJatekos(j) + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings) + " " + String.Join(", ", players[j].Prizes));
                 Console.ResetColor();
                 if (players[j].Winnings > players[finalWinner].Winnings)
                 {
@@ -427,6 +408,22 @@ namespace Szerencsekerek
             Console.SetCursorPosition(0, Console.CursorTop);
             Console.Write(new string(' ', Console.BufferWidth));
             Console.SetCursorPosition(0, Console.CursorTop);
+        }
+        static string SzinesJatekos(int i)
+        {
+            if ((i + 1) % 3 == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+            }
+            else if ((i + 1) % 3 == 2)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+            }
+            return (i+1).ToString();
         }
     }
 }
