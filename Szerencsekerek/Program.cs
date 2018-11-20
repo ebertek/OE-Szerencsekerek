@@ -224,6 +224,10 @@ namespace Szerencsekerek
             Winnings = 0;
         }
     }
+    enum GuessType
+    {
+        nothing, consonant, vowel, solution, shop
+    }
     class Program
     {
         static void Main(string[] args)
@@ -269,7 +273,7 @@ namespace Szerencsekerek
                 int currentPlayer = 0;
                 int winner = -1;
                 /* Draw the Puzzle Board and Standings */
-                void ReDraw(bool includeShop) // TODO: Find a better place for this function
+                void ReDraw(GuessType guessType) // TODO: Find a better place for this function
                 {
                     Console.Clear();
                     Console.WriteLine(i + ". kör \t\t 1) Megoldás 2) Magánhangzó vásárlása (" + String.Format(CI, "{0:C0}", vowelPrice) + ")");
@@ -280,7 +284,7 @@ namespace Szerencsekerek
                     }
                     Console.ResetColor();
                     Console.WriteLine();
-                    if (includeShop)
+                    if (guessType == GuessType.shop)
                     {
                         Console.WriteLine("A " + SzinesJatekos(winner) + ". játékos vásárolhat a kirakatból:");
                         Console.ResetColor();
@@ -303,7 +307,7 @@ namespace Szerencsekerek
                     }
 
                     /* Draw the Puzzle Board and Standings */
-                    ReDraw(false);
+                    // ReDraw(false);
 
                     /* Get user input */
                     int correct = int.MinValue; // number of letters found by the player
@@ -311,6 +315,7 @@ namespace Szerencsekerek
                     {
                         while (correct < 0)
                         {
+                            ReDraw(GuessType.consonant);
                             ClearCurrentLine();
                             Console.Write(SzinesJatekos(currentPlayer) + ". játékos, adj meg egy mássalhangzót (" + String.Format(CI, "{0:C0}", spun) + "): ");
                             Console.ResetColor();
@@ -329,7 +334,7 @@ namespace Szerencsekerek
                                     correct = 0;
                                     winner = currentPlayer; // board.gameOver is true, so we quit the main while loop
                                 }
-                                ReDraw(false);
+                                ReDraw(GuessType.consonant);
                             } else if (correct == -3) // player hit 2
                             {
                                 if (players[currentPlayer].Subtract(vowelPrice))
@@ -344,7 +349,7 @@ namespace Szerencsekerek
                                         winner = currentPlayer;
                                     }
                                 }
-                                ReDraw(false);
+                                ReDraw(GuessType.consonant);
                             }
                         }
                     }
@@ -369,14 +374,14 @@ namespace Szerencsekerek
                     }
                 }
                 /* Shop */
-                ReDraw(true);
+                ReDraw(GuessType.shop);
                 int index = int.MinValue;
                 while (index != -1 && players[winner].Winnings >= shop.LowestPrice())
                 {
                     Console.Write("Választott termék: ");
                     index = int.Parse(Console.ReadLine()) - 1;
                     players[winner].Buy(shop, index);
-                    ReDraw(true);
+                    ReDraw(GuessType.shop);
                 }
             } // for (int i = 1; i <= rounds; i++)
 
