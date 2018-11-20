@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace Szerencsekerek
 {
     class Wheel

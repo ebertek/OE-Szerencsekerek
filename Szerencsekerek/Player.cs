@@ -1,4 +1,6 @@
-﻿namespace Szerencsekerek
+﻿// using System.Collections;
+
+namespace Szerencsekerek
 {
     class Player
     {
