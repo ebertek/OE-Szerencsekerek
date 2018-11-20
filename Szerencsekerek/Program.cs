@@ -53,7 +53,7 @@ namespace Szerencsekerek
                 int currentPlayer = 0;
                 int winner = -1;
                 /* Draw the Puzzle Board and Standings */
-                void ReDraw(GuessType guessType) // TODO: Find a better place for this function
+                void ReDraw(GuessType guessType, int player = 0, int money = 0) // TODO: Find a better place for this function
                 {
                     Console.Clear();
                     Console.WriteLine(i + ". kör \t\t 1) Megoldás 2) Magánhangzó vásárlása (" + String.Format(CI, "{0:C0}", vowelPrice) + ")");
@@ -64,12 +64,37 @@ namespace Szerencsekerek
                     }
                     Console.ResetColor();
                     Console.WriteLine();
-                    if (guessType == GuessType.shop)
+                    switch (guessType)
                     {
-                        Console.WriteLine("A " + SzinesJatekos(winner) + ". játékos vásárolhat a kirakatból:");
-                        Console.ResetColor();
-                        Console.WriteLine(shop.ToString());
-                        Console.WriteLine("0) Tovább");
+                        case GuessType.consonant:
+                            {
+                                Console.Write(SzinesJatekos(player) + ". játékos, adj meg egy mássalhangzót (" + String.Format(CI, "{0:C0}", money) + "): ");
+                                Console.ResetColor();
+                                break;
+                            }
+                        case GuessType.solution:
+                            {
+                                Console.Write(SzinesJatekos(player) + ". játékos, add meg a megoldást " + String.Format(CI, "{0:C0}", players[player].Winnings) + "-ért: ");
+                                Console.ResetColor();
+                                break;
+                            }
+                        case GuessType.vowel:
+                            {
+                                Console.Write(SzinesJatekos(player) + ". játékos, adj meg egy betűt: ");
+                                Console.ResetColor();
+                                break;
+                            }
+                        case GuessType.shop:
+                            {
+                                Console.WriteLine("A " + SzinesJatekos(winner) + ". játékos vásárolhat a kirakatból:");
+                                Console.ResetColor();
+                                Console.WriteLine(shop.ToString());
+                                Console.WriteLine("0) Tovább");
+                                break;
+                            }
+                        case GuessType.nothing:
+                        default:
+                            break;
                     }
                 }
                 while (!board.GameOver)
@@ -95,16 +120,11 @@ namespace Szerencsekerek
                     {
                         while (correct < 0)
                         {
-                            ReDraw(GuessType.consonant);
-                            ClearCurrentLine();
-                            Console.Write(SzinesJatekos(currentPlayer) + ". játékos, adj meg egy mássalhangzót (" + String.Format(CI, "{0:C0}", spun) + "): ");
-                            Console.ResetColor();
+                            ReDraw(GuessType.consonant, currentPlayer, spun);
                             correct = board.Guess(Console.ReadKey().KeyChar, false);
                             if (correct == -2) // player hit 1
                             {
-                                ClearCurrentLine();
-                                Console.Write(SzinesJatekos(currentPlayer) + ". játékos, add meg a megoldást " + String.Format(CI, "{0:C0}", players[currentPlayer].Winnings) + "-ért: ");
-                                Console.ResetColor();
+                                ReDraw(GuessType.solution, currentPlayer);
                                 if (!board.Guess(Console.ReadLine()))
                                 {
                                     correct = 0;
@@ -119,9 +139,7 @@ namespace Szerencsekerek
                             {
                                 if (players[currentPlayer].Subtract(vowelPrice))
                                 {
-                                    ClearCurrentLine();
-                                    Console.Write(SzinesJatekos(currentPlayer) + ". játékos, adj meg egy betűt: ");
-                                    Console.ResetColor();
+                                    ReDraw(GuessType.vowel, currentPlayer);
                                     board.Guess(Console.ReadKey().KeyChar, true);
                                     if (board.GameOver) // if someone buys the last missing vowel instead of solving the puzzle, they still win the game
                                     {
@@ -180,12 +198,6 @@ namespace Szerencsekerek
             Console.WriteLine();
             Console.WriteLine("Gratulálok, " + (finalWinner + 1) + ". játékos, nyertél!");
             Console.ReadKey();
-        }
-        static void ClearCurrentLine()
-        {
-            Console.SetCursorPosition(0, Console.CursorTop);
-            Console.Write(new string(' ', Console.BufferWidth));
-            Console.SetCursorPosition(0, Console.CursorTop);
         }
         static string SzinesJatekos(int i)
         {
