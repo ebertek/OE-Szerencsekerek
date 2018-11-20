@@ -112,9 +112,6 @@ namespace Szerencsekerek
                         spun = wheel.Spin();
                     }
 
-                    /* Draw the Puzzle Board and Standings */
-                    // ReDraw(false);
-
                     /* Get user input */
                     int correct = int.MinValue; // number of letters found by the player
                     while (correct == int.MinValue) // invalid letter
