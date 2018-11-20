@@ -73,19 +73,16 @@ namespace Szerencsekerek
                         case GuessType.consonant:
                             {
                                 Console.Write(PlayerNrInColor(currentPlayer) + ". játékos, adj meg egy mássalhangzót (" + String.Format(Global.CI, "{0:C0}", spun) + "): ");
-                                Console.ResetColor();
                                 break;
                             }
                         case GuessType.solution:
                             {
                                 Console.Write(PlayerNrInColor(currentPlayer) + ". játékos, add meg a megoldást " + String.Format(Global.CI, "{0:C0}", players[currentPlayer].Winnings) + "-ért: ");
-                                Console.ResetColor();
                                 break;
                             }
                         case GuessType.vowel:
                             {
                                 Console.Write(PlayerNrInColor(currentPlayer) + ". játékos, adj meg egy betűt: ");
-                                Console.ResetColor();
                                 break;
                             }
                         case GuessType.shop:
@@ -100,6 +97,7 @@ namespace Szerencsekerek
                         default:
                             break;
                     }
+                    Console.ResetColor();
                 }
                 while (!board.GameOver)
                 {
