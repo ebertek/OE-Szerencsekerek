@@ -4,6 +4,10 @@
 
 namespace Szerencsekerek
 {
+    static class Global
+    {
+        public static readonly System.Globalization.CultureInfo CI = new System.Globalization.CultureInfo("hu-HU");
+    }
     enum GuessType
     {
         nothing, consonant, vowel, solution, shop
@@ -13,7 +17,6 @@ namespace Szerencsekerek
         static void Main(string[] args)
         {
             /* Initialize the Game */
-            System.Globalization.CultureInfo CI = new System.Globalization.CultureInfo("hu-HU");
             // int[] MTV = new int[] { 0, 1700, 5500, 1100, 6000, 1100, 2000, 1100, 1500, 5500, 1300, 4000, 900, 1100, 11000, 1600, 1200, 4000, 1500, 1200, 6000, 1000, 13000 };
             int[] husz = { 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000 };
             Wheel wheel = new Wheel(husz);
@@ -57,11 +60,11 @@ namespace Szerencsekerek
                 void ReDraw(GuessType guessType) // TODO: Find a better place for this function
                 {
                     Console.Clear();
-                    Console.WriteLine(i + ". kör \t\t 1) Megoldás 2) Magánhangzó vásárlása (" + String.Format(CI, "{0:C0}", vowelPrice) + ")");
+                    Console.WriteLine(i + ". kör \t\t 1) Megoldás 2) Magánhangzó vásárlása (" + String.Format(Global.CI, "{0:C0}", vowelPrice) + ")");
                     board.Draw();
                     for (int j = 0; j < players.Length; j++)
                     {
-                        Console.WriteLine(PlayerNrInColor(j) + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings) + " " + String.Join(", ", players[j].Prizes));
+                        Console.WriteLine(PlayerNrInColor(j) + ". játékos: " + String.Format(Global.CI, "{0:C0}", players[j].Winnings) + " " + String.Join(", ", players[j].Prizes));
                     }
                     Console.ResetColor();
                     Console.WriteLine();
@@ -69,13 +72,13 @@ namespace Szerencsekerek
                     {
                         case GuessType.consonant:
                             {
-                                Console.Write(PlayerNrInColor(currentPlayer) + ". játékos, adj meg egy mássalhangzót (" + String.Format(CI, "{0:C0}", spun) + "): ");
+                                Console.Write(PlayerNrInColor(currentPlayer) + ". játékos, adj meg egy mássalhangzót (" + String.Format(Global.CI, "{0:C0}", spun) + "): ");
                                 Console.ResetColor();
                                 break;
                             }
                         case GuessType.solution:
                             {
-                                Console.Write(PlayerNrInColor(currentPlayer) + ". játékos, add meg a megoldást " + String.Format(CI, "{0:C0}", players[currentPlayer].Winnings) + "-ért: ");
+                                Console.Write(PlayerNrInColor(currentPlayer) + ". játékos, add meg a megoldást " + String.Format(Global.CI, "{0:C0}", players[currentPlayer].Winnings) + "-ért: ");
                                 Console.ResetColor();
                                 break;
                             }
@@ -186,7 +189,7 @@ namespace Szerencsekerek
             int finalWinner = 0;
             for (int j = 0; j < players.Length; j++)
             {
-                Console.WriteLine(PlayerNrInColor(j) + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings) + " " + String.Join(", ", players[j].Prizes));
+                Console.WriteLine(PlayerNrInColor(j) + ". játékos: " + String.Format(Global.CI, "{0:C0}", players[j].Winnings) + " " + String.Join(", ", players[j].Prizes));
                 Console.ResetColor();
                 if (players[j].Winnings > players[finalWinner].Winnings)
                 {

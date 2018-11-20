@@ -63,12 +63,11 @@ namespace Szerencsekerek
         public override string ToString()
         {
             string ListOfItems = "";
-            System.Globalization.CultureInfo CI = new System.Globalization.CultureInfo("hu-HU"); // TODO: Use the same CI everywhere
             for (int i = 0; i < items.Length; i++)
             {
                 if (items[i] != "")
                 {
-                    ListOfItems += (i + 1) + ") " + items[i] + ", " + String.Format(CI, "{0:C0}", prices[i]) + "\n";
+                    ListOfItems += (i + 1) + ") " + items[i] + ", " + String.Format(Global.CI, "{0:C0}", prices[i]) + "\n";
                 }
             }
             return ListOfItems;
