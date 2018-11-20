@@ -61,7 +61,7 @@ namespace Szerencsekerek
                     board.Draw();
                     for (int j = 0; j < players.Length; j++)
                     {
-                        Console.WriteLine(SzinesJatekos(j) + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings) + " " + String.Join(", ", players[j].Prizes));
+                        Console.WriteLine(PlayerNrInColor(j) + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings) + " " + String.Join(", ", players[j].Prizes));
                     }
                     Console.ResetColor();
                     Console.WriteLine();
@@ -69,25 +69,25 @@ namespace Szerencsekerek
                     {
                         case GuessType.consonant:
                             {
-                                Console.Write(SzinesJatekos(currentPlayer) + ". játékos, adj meg egy mássalhangzót (" + String.Format(CI, "{0:C0}", spun) + "): ");
+                                Console.Write(PlayerNrInColor(currentPlayer) + ". játékos, adj meg egy mássalhangzót (" + String.Format(CI, "{0:C0}", spun) + "): ");
                                 Console.ResetColor();
                                 break;
                             }
                         case GuessType.solution:
                             {
-                                Console.Write(SzinesJatekos(currentPlayer) + ". játékos, add meg a megoldást " + String.Format(CI, "{0:C0}", players[currentPlayer].Winnings) + "-ért: ");
+                                Console.Write(PlayerNrInColor(currentPlayer) + ". játékos, add meg a megoldást " + String.Format(CI, "{0:C0}", players[currentPlayer].Winnings) + "-ért: ");
                                 Console.ResetColor();
                                 break;
                             }
                         case GuessType.vowel:
                             {
-                                Console.Write(SzinesJatekos(currentPlayer) + ". játékos, adj meg egy betűt: ");
+                                Console.Write(PlayerNrInColor(currentPlayer) + ". játékos, adj meg egy betűt: ");
                                 Console.ResetColor();
                                 break;
                             }
                         case GuessType.shop:
                             {
-                                Console.WriteLine("A " + SzinesJatekos(winner) + ". játékos vásárolhat a kirakatból:");
+                                Console.WriteLine("A " + PlayerNrInColor(winner) + ". játékos vásárolhat a kirakatból:");
                                 Console.ResetColor();
                                 Console.WriteLine(shop.ToString());
                                 Console.WriteLine("0) Tovább");
@@ -189,7 +189,7 @@ namespace Szerencsekerek
             int finalWinner = 0;
             for (int j = 0; j < players.Length; j++)
             {
-                Console.WriteLine(SzinesJatekos(j) + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings) + " " + String.Join(", ", players[j].Prizes));
+                Console.WriteLine(PlayerNrInColor(j) + ". játékos: " + String.Format(CI, "{0:C0}", players[j].Winnings) + " " + String.Join(", ", players[j].Prizes));
                 Console.ResetColor();
                 if (players[j].Winnings > players[finalWinner].Winnings)
                 {
@@ -200,13 +200,13 @@ namespace Szerencsekerek
             Console.WriteLine("Gratulálok, " + (finalWinner + 1) + ". játékos, nyertél!");
             Console.ReadKey();
         }
-        static string SzinesJatekos(int i)
+        static string PlayerNrInColor(int player)
         {
-            if ((i + 1) % 3 == 0)
+            if ((player + 1) % 3 == 0)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
             }
-            else if ((i + 1) % 3 == 2)
+            else if ((player + 1) % 3 == 2)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
             }
@@ -214,7 +214,7 @@ namespace Szerencsekerek
             {
                 Console.ForegroundColor = ConsoleColor.Blue;
             }
-            return (i+1).ToString();
+            return (player + 1).ToString();
         }
     }
 }
