@@ -80,7 +80,7 @@ namespace Szerencsekerek
                 return -(int)char.GetNumericValue(letter) - 1; // Special functions
             } else if ((ConsoleKey)letter == ConsoleKey.Escape) // Esc exits the app
             {
-                // TODO: Esc eats the next character
+                Console.WriteLine();
                 Environment.Exit(0);
                 return -1;
             } else
