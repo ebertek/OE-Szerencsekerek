@@ -29,10 +29,7 @@ namespace Szerencsekerek
                 shop.Buy(index);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
         public void Reset() // lose all points
         {

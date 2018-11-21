@@ -4,13 +4,13 @@ namespace Szerencsekerek
 {
     class Board
     {
-        private readonly string puzzle; // the actual puzzle to solve
-        private readonly int length; // length of the puzzle
-        private const char mask = '-'; // masking character
+        readonly string puzzle; // the actual puzzle to solve
+        readonly int length; // length of the puzzle
+        const char mask = '-'; // masking character
         // private const string mask = "💩"; // UTF-32 characters don't fit in a char
-        private readonly bool[] solved; // true/false for every character in the puzzle
-        private static readonly Random rnd = new Random(); // rng for selecting a line from a list of puzzles
-        private int done; // number of characters in the puzzle already solved
+        readonly bool[] solved; // true/false for every character in the puzzle
+        static readonly Random rnd = new Random(); // rng for selecting a line from a list of puzzles
+        int done; // number of characters in the puzzle already solved
         public bool GameOver { get; private set; } // true if the puzzle is solved
 
         public Board(ref string[] puzzles)
@@ -32,7 +32,7 @@ namespace Szerencsekerek
                 Normalize();
             } while (String.IsNullOrWhiteSpace(puzzle) || done == length);
         }
-        private void Normalize() // special characters in the puzzle (like ,) should be shown (="solved") by default
+        void Normalize() // special characters in the puzzle (like ,) should be shown (="solved") by default
         {
             for (int i = 0; i < length; i++)
             {
@@ -51,8 +51,7 @@ namespace Szerencsekerek
                 if (solved[i])
                 {
                     Console.Write(puzzle[i]);
-                }
-                else
+                } else
                 {
                     Console.Write(mask);
                 }
@@ -76,18 +75,15 @@ namespace Szerencsekerek
                 done += Correct;
                 GameOver |= done >= length;
                 return Correct;
-            }
-            else if (Char.IsDigit(letter))
+            } else if (Char.IsDigit(letter))
             {
                 return -(int)char.GetNumericValue(letter) - 1; // Special functions
-            }
-            else if ((ConsoleKey)letter == ConsoleKey.Escape) // Esc exits the app
+            } else if ((ConsoleKey)letter == ConsoleKey.Escape) // Esc exits the app
             {
                 // TODO: Esc eats the next character
                 Environment.Exit(0);
                 return -1;
-            }
-            else
+            } else
             {
                 Console.Beep();
                 return -1; // Vowel / unacceptable character
@@ -105,10 +101,7 @@ namespace Szerencsekerek
                 GameOver = true;
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
     }
 }

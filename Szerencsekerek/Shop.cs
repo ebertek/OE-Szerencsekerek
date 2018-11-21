@@ -5,8 +5,8 @@ namespace Szerencsekerek
 {
     class Shop
     {
-        private readonly string[] items;
-        private readonly int[] prices;
+        readonly string[] items;
+        readonly int[] prices;
 
         public Shop()
         {
@@ -20,10 +20,7 @@ namespace Szerencsekerek
             {
                 return items[index];
             }
-            else
-            {
-                return "";
-            }
+            return "";
         }
         public int Price(int index)
         {
@@ -31,10 +28,7 @@ namespace Szerencsekerek
             {
                 return prices[index];
             }
-            else
-            {
-                return 0;
-            }
+            return 0;
         }
         public void Buy(int index)
         {

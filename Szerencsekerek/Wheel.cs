@@ -4,8 +4,8 @@ namespace Szerencsekerek
 {
     class Wheel
     {
-        private readonly int[] layout; // wheel layout
-        private static readonly Random rnd = new Random(); // rng for spinning the wheel
+        readonly int[] layout; // wheel layout
+        static readonly Random rnd = new Random(); // rng for spinning the wheel
 
         public Wheel(int[] layout)
         {

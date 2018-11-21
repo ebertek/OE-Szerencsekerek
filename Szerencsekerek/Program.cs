@@ -84,7 +84,7 @@ namespace Szerencsekerek
                         {
                             Console.WriteLine("A " + PlayerNrInColor(winner) + ". játékos vásárolhat a kirakatból:");
                             Console.ResetColor();
-                            Console.WriteLine(shop.ToString());
+                            Console.WriteLine(shop);
                             Console.WriteLine("0) Tovább");
                             break;
                         }
@@ -156,8 +156,7 @@ namespace Szerencsekerek
                     if (correct > 0) // at least one letter found
                     {
                         players[currentPlayer].Add(spun * correct);
-                    }
-                    else if (correct == 0) // no letters found -> next player
+                    } else if (correct == 0) // no letters found -> next player
                     {
                         if (++currentPlayer == players.Length)
                         {
@@ -212,12 +211,10 @@ namespace Szerencsekerek
             if ((player + 1) % 3 == 0)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-            }
-            else if ((player + 1) % 3 == 2)
+            } else if ((player + 1) % 3 == 2)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-            }
-            else
+            } else
             {
                 Console.ForegroundColor = ConsoleColor.Blue;
             }
