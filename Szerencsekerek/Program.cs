@@ -176,8 +176,14 @@ namespace Szerencsekerek
                 while (index != -1 && players[winner].Winnings >= shop.LowestPrice())
                 {
                     Console.Write("Választott termék: ");
-                    index = int.Parse(Console.ReadLine()) - 1;
-                    players[winner].Buy(shop, index);
+                    if (int.TryParse(Console.ReadLine(), out index))
+                    {
+                        index--;
+                        players[winner].Buy(shop, index);
+                    } else
+                    {
+                        Console.Beep();
+                    }
                     ReDraw(GuessType.shop);
                 }
             } // for (int i = 1; i <= rounds; i++)
