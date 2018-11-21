@@ -48,57 +48,60 @@ namespace Szerencsekerek
             }
 
             const int vowelPrice = 5000;
+            Board board;
+            int currentRound,currentPlayer, winner, spun, correct, index;
+
+            /* Draw the Puzzle Board and Standings */
+            void ReDraw(GuessType guessType)
+            {
+                Console.Clear();
+                Console.WriteLine(currentRound + ". kör \t\t 1) Megoldás 2) Magánhangzó vásárlása (" + String.Format(Global.CI, "{0:C0}", vowelPrice) + ")");
+                board.Draw();
+                for (int j = 0; j < players.Length; j++)
+                {
+                    Console.WriteLine(PlayerNrInColor(j) + ". játékos: " + String.Format(Global.CI, "{0:C0}", players[j].Winnings) + " " + String.Join(", ", players[j].Prizes));
+                }
+                Console.ResetColor();
+                Console.WriteLine();
+                switch (guessType)
+                {
+                    case GuessType.consonant:
+                        {
+                            Console.Write(PlayerNrInColor(currentPlayer) + ". játékos, adj meg egy mássalhangzót (" + String.Format(Global.CI, "{0:C0}", spun) + "): ");
+                            break;
+                        }
+                    case GuessType.solution:
+                        {
+                            Console.Write(PlayerNrInColor(currentPlayer) + ". játékos, add meg a megoldást " + String.Format(Global.CI, "{0:C0}", players[currentPlayer].Winnings) + "-ért: ");
+                            break;
+                        }
+                    case GuessType.vowel:
+                        {
+                            Console.Write(PlayerNrInColor(currentPlayer) + ". játékos, adj meg egy betűt: ");
+                            break;
+                        }
+                    case GuessType.shop:
+                        {
+                            Console.WriteLine("A " + PlayerNrInColor(winner) + ". játékos vásárolhat a kirakatból:");
+                            Console.ResetColor();
+                            Console.WriteLine(shop.ToString());
+                            Console.WriteLine("0) Tovább");
+                            break;
+                        }
+                    case GuessType.nothing:
+                    default:
+                        break;
+                }
+                Console.ResetColor();
+            }
 
             /* Start the Game */
-            for (int i = 1; i <= rounds; i++)
+            for (currentRound = 1; currentRound <= rounds; currentRound++)
             {
-                Board board = new Board(ref puzzles);
-                int currentPlayer = 0;
-                int winner = -1;
-                int spun = int.MinValue;
-                /* Draw the Puzzle Board and Standings */
-                void ReDraw(GuessType guessType) // TODO: Find a better place for this function
-                {
-                    Console.Clear();
-                    Console.WriteLine(i + ". kör \t\t 1) Megoldás 2) Magánhangzó vásárlása (" + String.Format(Global.CI, "{0:C0}", vowelPrice) + ")");
-                    board.Draw();
-                    for (int j = 0; j < players.Length; j++)
-                    {
-                        Console.WriteLine(PlayerNrInColor(j) + ". játékos: " + String.Format(Global.CI, "{0:C0}", players[j].Winnings) + " " + String.Join(", ", players[j].Prizes));
-                    }
-                    Console.ResetColor();
-                    Console.WriteLine();
-                    switch (guessType)
-                    {
-                        case GuessType.consonant:
-                            {
-                                Console.Write(PlayerNrInColor(currentPlayer) + ". játékos, adj meg egy mássalhangzót (" + String.Format(Global.CI, "{0:C0}", spun) + "): ");
-                                break;
-                            }
-                        case GuessType.solution:
-                            {
-                                Console.Write(PlayerNrInColor(currentPlayer) + ". játékos, add meg a megoldást " + String.Format(Global.CI, "{0:C0}", players[currentPlayer].Winnings) + "-ért: ");
-                                break;
-                            }
-                        case GuessType.vowel:
-                            {
-                                Console.Write(PlayerNrInColor(currentPlayer) + ". játékos, adj meg egy betűt: ");
-                                break;
-                            }
-                        case GuessType.shop:
-                            {
-                                Console.WriteLine("A " + PlayerNrInColor(winner) + ". játékos vásárolhat a kirakatból:");
-                                Console.ResetColor();
-                                Console.WriteLine(shop.ToString());
-                                Console.WriteLine("0) Tovább");
-                                break;
-                            }
-                        case GuessType.nothing:
-                        default:
-                            break;
-                    }
-                    Console.ResetColor();
-                }
+                board = new Board(ref puzzles);
+                currentPlayer = 0;
+                winner = -1;
+                spun = int.MinValue;
                 while (!board.GameOver)
                 {
                     /* Spin the Wheel */
@@ -114,7 +117,7 @@ namespace Szerencsekerek
                     }
 
                     /* Get user input */
-                    int correct = int.MinValue; // number of letters found by the player
+                    correct = int.MinValue; // number of letters found by the player
                     while (correct == int.MinValue) // invalid letter
                     {
                         while (correct < 0)
@@ -172,7 +175,7 @@ namespace Szerencsekerek
                 }
                 /* Shop */
                 ReDraw(GuessType.shop);
-                int index = int.MinValue;
+                index = int.MinValue; // index of the item the player wants to buy
                 while (index != -1 && players[winner].Winnings >= shop.LowestPrice())
                 {
                     Console.Write("Választott termék: ");
