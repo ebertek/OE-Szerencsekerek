@@ -61,7 +61,7 @@ namespace Szerencsekerek
             {
                 if (items[i] != "")
                 {
-                    ListOfItems += (i + 1) + ") " + items[i] + ", " + String.Format(Global.CI, "{0:C0}", prices[i]) + "\n";
+                    ListOfItems += (i + 1) + ") " + items[i] + ", " + String.Format(Global.CI, "{0:C0}", prices[i]) + Environment.NewLine;
                 }
             }
             return ListOfItems;

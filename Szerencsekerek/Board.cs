@@ -56,7 +56,7 @@ namespace Szerencsekerek
                     Console.Write(mask);
                 }
             }
-            Console.Write('\n');
+            Console.Write(Environment.NewLine);
         }
         public int Guess(char letter, bool anyCharacter)
         {
