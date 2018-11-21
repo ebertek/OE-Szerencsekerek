@@ -61,7 +61,7 @@ namespace Szerencsekerek
         public int Guess(char letter, bool anyCharacter)
         {
             letter = Char.ToUpper(letter);
-            if (anyCharacter || "BCDFGHJKLMNPQRSTVWXZ".Contains(letter))
+            if (anyCharacter || "BCDFGHJKLMNPQRSTVWXZ".Contains(letter.ToString())) //char.ToString() is needed in .NET Framework 4.6.1, not needed in .NET Core
             {
                 int Correct = 0;
                 for (int i = 0; i < length; i++)
