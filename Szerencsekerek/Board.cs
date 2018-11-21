@@ -7,7 +7,7 @@ namespace Szerencsekerek
         readonly string puzzle; // the actual puzzle to solve
         readonly int length; // length of the puzzle
         const char mask = '-'; // masking character
-        // private const string mask = "💩"; // UTF-32 characters don't fit in a char
+        // const string mask = "💩"; // UTF-32 characters don't fit in a char
         readonly bool[] solved; // true/false for every character in the puzzle
         static readonly Random rnd = new Random(); // rng for selecting a line from a list of puzzles
         int done; // number of characters in the puzzle already solved
