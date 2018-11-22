@@ -1,0 +1,20 @@
+Matematika I. - Analízis I.
+Bevezetés a informatikába
+Makroökonómia
+Szoftvertervezés és -fejlesztés I.
+Villamosságtan
+Diszkrét matematika és lineáris algebra I.
+Számítógép hálózatok
+Szoftvertervezés és -fejlesztés II.
+Elektronika
+Diszkrét matematika és lineáris algebra II.
+Analízis II.
+Fizika
+Mikroökonómia
+Szakmai szigorlat
+Vállalkozás gazdaságtan I.
+Web programozás és haladó fejlesztési technikák
+Adatbázisok
+Rendszerelmélet
+Operációs rendszerek
+Digitális rendszerek
